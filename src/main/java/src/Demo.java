@@ -41,17 +41,7 @@ public class Demo {
 
 
     }
-//    public static String showParkingInformation() {
-//        return """
-//
-//                        Welcome to Experian`s parking lot !
-//                             To park a vehicle press: 1
-//                     To take out a vehicle from parking slot press: 2
-//                       For a list of all available vehicle press: 3
-//                 For a list of characteristics on specific vehicle press: 4
-//                                To leave press: 5
-//                """;
-//    }
+
 
 }
 
