@@ -7,32 +7,33 @@ import org.jetbrains.annotations.NotNull;
 import src.recipe.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Utils {
-    private Utils() {};
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    static Scanner scanner = new Scanner(System.in);
 
-    public static void stopTheSystem(String message) {
-        System.err.println(message);
-        System.exit(-1);
+    private Utils() {
     }
 
-    public static void deleteRecord(String pathName, int index){
-        CSVReader reader2 = null;
+    public static void deleteRecord(String pathName, int index) {
+        CSVReader reader ;
         try {
-            reader2 = new CSVReader(new FileReader(pathName));
+            reader = new CSVReader(new FileReader(pathName));
 
-            List<String[]> allElements = reader2.readAll();
+            List<String[]> allElements = reader.readAll();
             allElements.remove(index);
-            FileWriter sw = new FileWriter(pathName);
-            CSVWriter writer = new CSVWriter(sw);
+            FileWriter fileWriter = new FileWriter(pathName);
+            CSVWriter writer = new CSVWriter(fileWriter);
             writer.writeAll(allElements);
             writer.close();
         } catch (IOException e) {
-            throw new IllegalStateException("File not found");
+            System.err.println("File not found");
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println(" Index out of bounds");
         }
     }
 
@@ -46,16 +47,22 @@ public class Utils {
 
             List<String[]> data = new ArrayList<>();
             data.add(files);
-            writer.writeAll(data);
+
+            List<String[]> oldData = readingCSV(pathName);
+            if (!(oldData.contains(files))) {
+                writer.writeAll(data);
+                // todo трие ми рецептата
+            }
+
 
             writer.close();
         } catch (IOException e) {
-            throw new IllegalStateException("File not found");
+            System.err.println("File not found");
         }
     }
 
     public static List<String[]> readingCSV(String fileName) {
-        List<String[]> allData;
+        List<String[]> allData = null;
         try {
             FileReader filereader = new FileReader(fileName);
             try (CSVReader csvReader = new CSVReaderBuilder(filereader)
@@ -65,67 +72,148 @@ public class Utils {
             }
             filereader.close();
         } catch (IOException e) {
-            throw new IllegalStateException("File not found.");
+            System.err.println("File not found.");
         }
         return allData;
     }
-    public static void creatingRecipeList(List<Recipe> recipes, List<String[]> allData, String name) {
+
+    public static void creatingRecipeList(List<Recipe> recipes, List<String[]> allData) {
         Recipe recipe;
         String[] nextLine;
-
         for (String[] row : allData) {
             nextLine = row;
 
-            recipe = getRecipe(name);
+            String recipeName = nextLine[0];
+            recipe = getRecipeType(recipeName);
 
             recipe.setName(nextLine[0]);
-            recipe.setYield(Integer.parseInt(nextLine[1]));
-            recipe.setPrepTime(Integer.parseInt(nextLine[2]));
+
+            try {
+                recipe.setYield(Integer.parseInt(nextLine[1].trim()));
+                recipe.setPrepTime(Integer.parseInt(nextLine[2].trim()));
+            } catch (NumberFormatException e) {
+                System.err.println("Enter digits for yield and for preparation time");
+            }
             recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
-            recipe.setDirections(1, nextLine[4]);
-            recipe.setDirections(2, nextLine[5]);
-            recipe.setDirections(3, nextLine[6]);
+
+//            AtomicInteger countSteps = new AtomicInteger(0);
+            int countSteps = 0;
+            String[] split = nextLine[4].split("\n");
+            for (int i = 0; i < split.length; i++) {
+                recipe.setDirections(countSteps++, split[i]);
+            }
 
             recipes.add(recipe);
+
+            for (int i = 1; i < recipes.size(); i++) {
+                if (recipes.get(i - 1).getName().equals(recipeName)) {
+                    recipes.remove(recipe);
+                }
+            }
+        }
+    }
+
+
+    public static void addOneRecipeInList(List<Recipe> recipes, String[] data) {
+        Recipe recipe;
+
+        String recipeName = data[0];
+        recipe = getRecipeType(recipeName);
+
+        recipe.setName(data[0]);
+        try {
+            recipe.setYield(Integer.parseInt(data[1]));
+            recipe.setPrepTime(Integer.parseInt(data[2]));
+        } catch (NumberFormatException e) {
+            System.err.println("Enter digit for yield and for preparation time");
+        }
+        recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
+
+        AtomicInteger countSteps = new AtomicInteger(0);
+        String[] split = data[4].split("\\.");
+        for (int i = 0; i < split.length; i++) {
+            recipe.setDirections(countSteps.addAndGet(1), split[i]);
+        }
+
+        recipes.add(recipe);
+
+        for (int i = 1; i < recipes.size(); i++) {
+            if (recipes.get(i - 1).getName().equals(recipeName)) {
+                recipes.remove(recipe);
+            }
         }
     }
 
 
     @NotNull
-    private static Recipe getRecipe(String name) {
-        Recipe recipe;
-        switch (name.toLowerCase().trim()) {
-            case "meatrecipe":
-            case "meat":
-                recipe = new MeatRecipe();
-                break;
-            case "meatlessrecipe":
-            case "meatless":
-                recipe = new MeatlessRecipe();
-                break;
-            case "saladrecipe":
-            case "salad":
-                recipe = new SaladRecipe();
-                break;
-            case "souprecipe":
-            case "soup":
-                recipe = new SoupRecipe();
-                break;
-            case "desertrecipe":
-            case "desert":
-                recipe = new DesertRecipe();
-                break;
-            case "alaminutrecipe":
-            case "alaminut":
-                recipe = new AlaminutRecipe();
-                break;
-            case "pastarecipe":
-            case "pasta":
-                recipe = new PastaRecipe();
-                break;
-            default:
-                throw new IllegalStateException("Wrong recipe type");
+    private static Recipe getRecipeType(String name) {
+
+        Recipe recipe = null;
+        boolean again = false;
+        String[] fullName = name.split("\\s+");
+        int count = 0;
+        String firstWordOfName;
+
+
+        for (int i = 0; i <= fullName.length; i++) {
+            if (again) {
+                System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Desert, Pasta or Alaminut");
+                firstWordOfName = scanner.nextLine();
+            } else {
+                firstWordOfName = fullName[i];
+            }
+            switch (firstWordOfName.toLowerCase().trim()) {
+                case "meatrecipe":
+                case "meat":
+                case "pork":
+                case "chicken":
+                    recipe = new MeatRecipe();
+                    return recipe;
+                case "meatlessrecipe":
+                case "meatless":
+                case "no meat":
+                case "vegan":
+                case "without meat":
+                    recipe = new MeatlessRecipe();
+                    return recipe;
+                case "saladrecipe":
+                case "salad":
+                    recipe = new SaladRecipe();
+                    return recipe;
+                case "souprecipe":
+                case "soup":
+                    recipe = new SoupRecipe();
+                    return recipe;
+                case "desertrecipe":
+                case "desert":
+                case "sweet":
+                    recipe = new DesertRecipe();
+                    return recipe;
+                case "alaminutrecipe":
+                case "alaminut":
+                    recipe = new AlaminutRecipe();
+                    return recipe;
+                case "pastarecipe":
+                case "bread":
+                case "pasta":
+                case "dough":
+                case "pancakes":
+                    recipe = new PastaRecipe();
+                    return recipe;
+                case "cocktailrecipe":
+                case "cocktail":
+                case "drinks":
+                    recipe = new CocktailRecipe();
+                    return recipe;
+                default:
+                    count++;
+                    again = count > fullName.length - 1;
+            }
         }
+        System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Desert, Pasta or Alaminut");
+        firstWordOfName = scanner.nextLine();
+        recipe = getRecipeType(firstWordOfName);
         return recipe;
     }
+
 }

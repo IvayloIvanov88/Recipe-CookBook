@@ -3,8 +3,10 @@ package src.recipe;
 import java.util.*;
 
 import static java.lang.String.format;
+import static src.utils.Utils.ANSI_RED;
+import static src.utils.Utils.ANSI_RESET;
 
-public  abstract class Recipe  {
+public abstract class Recipe {
     private String name;
     private List<String> ingredient;
     private int yield;
@@ -24,12 +26,27 @@ public  abstract class Recipe  {
         this.directions = new HashMap<>();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Recipe)) return false;
+        Recipe recipe = (Recipe) o;
+        return this.getName().equals(recipe.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
 
     @Override
     public String toString() {
 
-        return format("Recipe name is: %s\ningredients are: %s, for: %d portions.\nTime for preparation: %d min." +
-                        "\nPreparation:\n%s",
+        return format(ANSI_RED + "Recipe name is: " + ANSI_RESET + "%s" +
+                        "\n" + ANSI_RED + "ingredients are:\n" + ANSI_RESET + "%s." +
+                        "\n" + ANSI_RED + "for: " + ANSI_RESET + "%d portions." +
+                        "\n" + ANSI_RED + "Time for preparation: " + ANSI_RESET + "%d min." +
+                        "\n" + ANSI_RED + "Preparation:" + ANSI_RESET + "\n%s",
                 this.name,
                 String.join(", ", this.ingredient),
                 this.yield,
@@ -41,7 +58,7 @@ public  abstract class Recipe  {
     protected StringBuilder getPreparationAsStringBuilder() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, String> entry : this.directions.entrySet()) {
-            sb.append(String.format("Step: %d -> %s\n", entry.getKey(), entry.getValue()));
+            sb.append(String.format(ANSI_RED + "\tStep: %d " + ANSI_RESET + "-> %s\n", entry.getKey(), entry.getValue()));
         }
         return sb;
     }
@@ -52,7 +69,7 @@ public  abstract class Recipe  {
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalStateException("The Recipe should have a name");
+            System.err.println("The Recipe should have a name");
         } else {
             this.name = name;
         }
@@ -65,7 +82,7 @@ public  abstract class Recipe  {
 
     public void addIngredient(String ingredient) {
         if (ingredient == null || ingredient.trim().isEmpty()) {
-            throw new IllegalStateException("The Recipe should have an ingredient");
+            System.err.println("The Recipe should have an ingredient");
         } else {
             this.ingredient.add(ingredient);
         }
@@ -73,30 +90,27 @@ public  abstract class Recipe  {
 
     public void addAllIngredient(List<String> ingredient) {
         if (ingredient == null || ingredient.isEmpty()) {
-            throw new IllegalStateException("The Recipe should have an ingredient");
+            System.err.println("The Recipe should have an ingredient");
         } else {
             this.ingredient.addAll(ingredient);
         }
     }
+
     public int getYield() {
         return yield;
     }
 
     public void setYield(int yield) {
         if (yield <= 0) {
-            throw new IllegalStateException("The Recipe should have at least one serving ");
+            System.err.println("The Recipe should have at least one serving ");
         } else {
             this.yield = yield;
         }
     }
 
-    public int getPrepTime() {
-        return prepTime;
-    }
-
     public void setPrepTime(int prepTime) {
         if (prepTime <= 0) {
-            throw new IllegalStateException("The Recipe should have positive preparation time");
+            System.err.println("The Recipe should have positive preparation time");
         } else {
             this.prepTime = prepTime;
         }
@@ -110,9 +124,8 @@ public  abstract class Recipe  {
         this.directions.putIfAbsent(step, stepDescription);
     }
 
-    public void setAllDirections(Map<Integer,String> directions){
+    public void setAllDirections(Map<Integer, String> directions) {
         this.directions.putAll(directions);
     }
-
 
 }

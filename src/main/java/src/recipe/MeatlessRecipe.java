@@ -18,11 +18,10 @@ public class MeatlessRecipe extends Recipe {
     @Override
     public void addIngredient(String ingredient){
         if(ingredient.equals("meat")){
-            throw new IllegalArgumentException("This recipe is meatless");
+            System.err.println("This recipe is meatless");
         }else {
             super.addIngredient(ingredient);
         }
-
     }
 
 

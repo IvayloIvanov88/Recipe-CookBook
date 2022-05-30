@@ -17,8 +17,8 @@ public class AlaminutRecipe extends Recipe{
     }
     @Override
     public void setPrepTime(int prepTime) {
-        if (prepTime > 10) {
-            throw new IllegalStateException("The Alaminut recipe should be prepared within 10 minutes");
+        if (prepTime > 15) {
+            System.err.println("The Alaminut recipe should be prepared within 15 minutes");
         } else {
             super.setPrepTime(prepTime);
         }
