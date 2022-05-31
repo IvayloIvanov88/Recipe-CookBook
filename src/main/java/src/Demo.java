@@ -41,10 +41,7 @@ public class Demo {
                     break;
 
                 case "2":
-                    String[] filesToAdd = getUsersChooseFileToAdd(scanner);
-                    Utils.writeDataAtOnce(UNHIDDEN_RECIPE_PATH, filesToAdd);
-                    Utils.addOneRecipeInList(unhiddenRecipes, filesToAdd);
-                    System.out.println("Recipe was added.");
+                    addNewRecipe(scanner, unhiddenRecipes, UNHIDDEN_RECIPE_PATH);
                     break;
 
                 case "3":
@@ -84,8 +81,17 @@ public class Demo {
                 case "123":
                     choose = getUserChoose(scanner, "How old are you, and don't lie ?");
                     if (validateUserAge(choose)) {
-                        System.out.println("Welcome to the secret section with alcoholic beverages");
-                        hiddenRecipes.forEach(System.out::println);
+                        System.out.println("Welcome to the secret section with alcoholic beverages!\nTo view all hidden recipes press: 1\nTo add new recipe press: 2  ");
+                        choose = scanner.nextLine().trim();
+                        switch (choose){
+                            case "1":
+                                hiddenRecipes.forEach(System.out::println);
+                                break;
+                            case "2":
+                                addNewRecipe(scanner, hiddenRecipes, HIDDEN_RECIPE_PATH);
+                                break;
+                        }
+
                     } else {
                         System.err.println("You are still very young");
                     }
@@ -98,7 +104,6 @@ public class Demo {
         }
     }
 
-
     private static void listAllRecipesByName(List<Recipe> unhiddenRecipes) {
         AtomicInteger countRecipe = new AtomicInteger(0);
         unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
@@ -107,6 +112,16 @@ public class Demo {
     private static String getUserChoose(Scanner scanner, String message) {
         System.out.println(message);
         return scanner.nextLine();
+    }
+    private static void addNewRecipe(Scanner scanner, List<Recipe> recipes, String path){
+        String[] filesToAdd = getUsersChooseFileToAdd(scanner);
+        if(Utils.addOneRecipeInList(recipes, filesToAdd)){
+            Utils.writeDataAtOnce(path, filesToAdd);
+            System.out.println("Recipe was added.");
+        }else {
+            System.err.println("Such recipe already exists.");
+        }
+
     }
 
     @NotNull
