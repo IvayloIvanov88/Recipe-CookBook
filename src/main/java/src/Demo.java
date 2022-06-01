@@ -9,13 +9,15 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static src.utils.Utils.ANSI_RED;
-import static src.utils.Utils.ANSI_RESET;
+import static src.utils.Utils.*;
 
 public class Demo {
 
+    public static final String PRINT_LINE = "|----------------------------------------------|\n";
+
     private static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
     private static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
+    private static final String DELIMITER = "delimiter";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -37,30 +39,43 @@ public class Demo {
             switch (choose) {
                 case "1":
                     AtomicInteger count = new AtomicInteger(0);
-                    unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", count.addAndGet(1), r));
+                    unhiddenRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
                     break;
 
                 case "2":
-                    addNewRecipe(scanner, unhiddenRecipes, UNHIDDEN_RECIPE_PATH);
+                    String[] filesToAdd = getUsersChooseFileToAdd(scanner);
+                    if (!Utils.isRecipeExist(unhiddenRecipeData, filesToAdd)) {
+                        Utils.writeData(UNHIDDEN_RECIPE_PATH, filesToAdd);
+                        Utils.addOneRecipeInList(unhiddenRecipes, filesToAdd);
+                        System.out.println("Recipe was added.");
+                    } else {
+                        System.err.println("There is such a recipe");
+                    }
+
                     break;
 
                 case "3":
                     listAllRecipesByName(unhiddenRecipes);
+
                     choose = getUserChoose(scanner, "Choose recipe by name to change");
-                    List<Recipe> recipeByName = getRecipeByName(unhiddenRecipes, choose);
 
                     String[] usersChooseFileToAdd = getUsersChooseFileToAdd(scanner);
-                    unhiddenRecipes.removeAll(recipeByName);
-                    Utils.addOneRecipeInList(unhiddenRecipes, usersChooseFileToAdd);
-                    Utils.writeDataAtOnce(UNHIDDEN_RECIPE_PATH, usersChooseFileToAdd);
 
+                    if (Utils.isRecipeExist(unhiddenRecipeData, usersChooseFileToAdd)) {
+                        List<Recipe> recipeByName = getRecipeByName(unhiddenRecipes, choose);
+                        unhiddenRecipes.removeAll(recipeByName);
+                        Utils.addOneRecipeInList(unhiddenRecipes, usersChooseFileToAdd);
+                        Utils.writeData(UNHIDDEN_RECIPE_PATH, usersChooseFileToAdd);
+                    } else {
+                        System.err.println("There is no such recipe");
+                    }
                     break;
                 case "4":
                     listAllRecipesByName(unhiddenRecipes);
                     choose = getUserChoose(scanner, "Choose number to delete");
                     try {
                         int userChoose = Integer.parseInt(choose);
-                        Utils.deleteRecord(UNHIDDEN_RECIPE_PATH, userChoose);
+                        Utils.deleteData(UNHIDDEN_RECIPE_PATH, userChoose);
                         unhiddenRecipes.remove(userChoose - 1);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
                         System.err.println("Try with valid number");
@@ -80,18 +95,10 @@ public class Demo {
 
                 case "123":
                     choose = getUserChoose(scanner, "How old are you, and don't lie ?");
-                    if (validateUserAge(choose)) {
-                        System.out.println("Welcome to the secret section with alcoholic beverages!\nTo view all hidden recipes press: 1\nTo add new recipe press: 2  ");
-                        choose = scanner.nextLine().trim();
-                        switch (choose){
-                            case "1":
-                                hiddenRecipes.forEach(System.out::println);
-                                break;
-                            case "2":
-                                addNewRecipe(scanner, hiddenRecipes, HIDDEN_RECIPE_PATH);
-                                break;
-                        }
 
+                    if (validateUserAge(choose)) {
+                        System.out.println(ANSI_GREEN+"Welcome to the secret section with alcoholic beverages\n"+ANSI_RESET);
+                        hiddenRecipes.forEach(System.out::println);
                     } else {
                         System.err.println("You are still very young");
                     }
@@ -104,6 +111,7 @@ public class Demo {
         }
     }
 
+
     private static void listAllRecipesByName(List<Recipe> unhiddenRecipes) {
         AtomicInteger countRecipe = new AtomicInteger(0);
         unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
@@ -113,16 +121,6 @@ public class Demo {
         System.out.println(message);
         return scanner.nextLine();
     }
-    private static void addNewRecipe(Scanner scanner, List<Recipe> recipes, String path){
-        String[] filesToAdd = getUsersChooseFileToAdd(scanner);
-        if(Utils.addOneRecipeInList(recipes, filesToAdd)){
-            Utils.writeDataAtOnce(path, filesToAdd);
-            System.out.println("Recipe was added.");
-        }else {
-            System.err.println("Such recipe already exists.");
-        }
-
-    }
 
     @NotNull
     private static String[] getUsersChooseFileToAdd(Scanner scanner) {
@@ -130,45 +128,26 @@ public class Demo {
 
         System.out.println("Enter recipe`s name.");
         String toAppendName = scanner.nextLine();
-        sb.append(toAppendName).append("delimiter");
+        sb.append(toAppendName).append(DELIMITER);
 
         System.out.println("How many portions ?");
         String toAppendYield = scanner.nextLine();
-        sb.append(toAppendYield).append("delimiter");
+        sb.append(toAppendYield).append(DELIMITER);
 
         System.out.println("Preparation time ?");
         String toAppendPreparationTime = scanner.nextLine();
-        sb.append(toAppendPreparationTime).append("delimiter");
+        sb.append(toAppendPreparationTime).append(DELIMITER);
 
         System.out.println("What are ingredients ?");
         String toAppendIngredients = scanner.nextLine();
-        sb.append(toAppendIngredients).append("delimiter");
+        sb.append(toAppendIngredients).append(DELIMITER);
 
         System.out.println("What are the preparation steps ?");
 
         String toAppendThirdStep = scanner.nextLine();
-        sb.append(toAppendThirdStep).append("delimiter");
+        sb.append(toAppendThirdStep).append(DELIMITER);
 
-        return sb.toString().split("delimiter");
-//        while (scanner.hasNext()){
-//
-//            if ((scanner.nextLine().trim().isEmpty())){
-//                scanner.close();
-//                return sb.toString().split("delimiter");
-//            }
-//            String toAppendFirstStep = scanner.nextLine();
-//            sb.append(toAppendFirstStep); //.append("delimiter")
-//
-//        }
-//
-//        System.out.println("What is the second step of preparation ?");
-//        String toAppendSecondStep = scanner.nextLine();
-//        sb.append(toAppendSecondStep).append("delimiter");
-//
-//        System.out.println("What is the third step of preparation ?");
-//        String toAppendThirdStep = scanner.nextLine();
-//        sb.append(toAppendThirdStep).append("delimiter");
-//
+        return sb.toString().split(DELIMITER);
 
     }
 
@@ -187,9 +166,24 @@ public class Demo {
     }
 
     public static void showOptions() {
-        System.out.println("\tWelcome to" + ANSI_RED + " Experian`s " + ANSI_RESET + "recipe book\nTo read all recipes press: 1\nTo add a recipe press: 2\n" +
-                "To edit recipe press: 3\nTo delete recipe press: 4\nTo find specific recipe by name press: 5\n" +
-                "To find specific recipe by type press: 6\nTo exit type: exit\n");
+        System.out.println(PRINT_LINE +
+                "|\t\t" + ANSI_RED + "Welcome to Experian`s recipe book" + ANSI_RESET + "      |\n" +
+                PRINT_LINE +
+                "|\t1. Read all recipes                        |\n" +
+                PRINT_LINE +
+                "|\t2. Add a recipe                            |\n" +
+                PRINT_LINE +
+                "|\t3. Edit recipe                             |\n" +
+                PRINT_LINE +
+                "|\t4. Delete recipe                           |\n" +
+                PRINT_LINE +
+                "|\t5. Find specific recipe by name            |\n" +
+                PRINT_LINE +
+                "|\t6. Find specific recipe by type            |\n" +
+                PRINT_LINE + PRINT_LINE +
+                "|\tTo exit type: exit                         |\n" +
+                PRINT_LINE);
+
 
     }
 
