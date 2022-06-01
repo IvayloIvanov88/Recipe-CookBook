@@ -2,8 +2,8 @@ package src.recipe;
 
 public class CocktailRecipe extends Recipe{
 
-    public CocktailRecipe(String name, int yield, int prepTime) {
-        super(name, yield, prepTime);
+    public CocktailRecipe(String name, int serving, int prepTime) {
+        super(name, serving, prepTime);
     }
 
     public CocktailRecipe() {

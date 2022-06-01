@@ -3,8 +3,8 @@ package src.recipe;
 
 public class AlaminutRecipe extends Recipe{
 
-    public AlaminutRecipe(String name, int yield, int prepTime) {
-        super(name, yield, prepTime);
+    public AlaminutRecipe(String name, int serving, int prepTime) {
+        super(name, serving, prepTime);
     }
 
     public AlaminutRecipe() {

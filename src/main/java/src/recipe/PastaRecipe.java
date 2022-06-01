@@ -2,8 +2,8 @@ package src.recipe;
 
 public class PastaRecipe extends Recipe{
 
-    public PastaRecipe(String name, int yield, int prepTime) {
-        super(name, yield, prepTime);
+    public PastaRecipe(String name, int serving, int prepTime) {
+        super(name, serving, prepTime);
     }
 
     public PastaRecipe() {

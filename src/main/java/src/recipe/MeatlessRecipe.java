@@ -2,8 +2,8 @@ package src.recipe;
 
 public class MeatlessRecipe extends Recipe {
 
-    public MeatlessRecipe(String name, int yield, int prepTime) {
-        super(name, yield, prepTime);
+    public MeatlessRecipe(String name, int serving, int prepTime) {
+        super(name, serving, prepTime);
     }
 
     public MeatlessRecipe() {

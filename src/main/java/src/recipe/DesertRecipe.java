@@ -2,8 +2,8 @@ package src.recipe;
 
 public class DesertRecipe extends Recipe{
 
-    public DesertRecipe(String name, int yield, int prepTime) {
-        super(name, yield, prepTime);
+    public DesertRecipe(String name, int serving, int prepTime) {
+        super(name, serving, prepTime);
     }
 
     public DesertRecipe() {
