@@ -1,4 +1,4 @@
-recipe_name,yield,preparation_time,ingredients,first_step_preparation
+recipe_name,serving,preparation_time,ingredients,first_step_preparation
 Easter bread,4,120,"Flour, eggs, salt, sugar, milk, oil","pick all products
 Mix all the products and leave the dough for one hour to rise
 bake in oven for one hour
@@ -114,7 +114,7 @@ It will curl round and set to a neat round shape. Cook for 2-3 mins, then remove
 3 tbsp white wine vinegar. Lower the heat down to a gentle simmer.
 Break the eggs into four separate coffee cups or ramekins.
 Split the muffins, toast them for a few minutes either side and warm some plates."
-Jam tarts desert,5,25,"250g plain flour, plus extra for dusting
+Jam tarts dessert,5,25,"250g plain flour, plus extra for dusting
 125g butter, chilled and diced, plus extra for the tin
 1 medium egg
 1 vanilla pod, seeds scraped (optional)

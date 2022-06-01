@@ -182,8 +182,8 @@ public class Utils {
                 case "soup":
                     recipe = new SoupRecipe();
                     return recipe;
-                case "desert recipe":
-                case "desert":
+                case "dessert recipe":
+                case "dessert":
                 case "sweet":
                     recipe = new DessertRecipe();
                     return recipe;
