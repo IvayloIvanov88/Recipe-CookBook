@@ -114,34 +114,40 @@ public class Utils {
     }
 
 
-    public static void addOneRecipeInList(List<Recipe> recipes, String[] data) {
+    public static boolean addOneRecipeInList(List<Recipe> recipes, String[] data) {
         Recipe recipe;
 
         String recipeName = data[0];
         recipe = getRecipeType(recipeName);
 
-        recipe.setName(data[0]);
-        try {
-            recipe.setYield(Integer.parseInt(data[1]));
-            recipe.setPrepTime(Integer.parseInt(data[2]));
-        } catch (NumberFormatException e) {
-            System.err.println("Enter digit for yield and for preparation time");
-        }
-        recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
-
-        AtomicInteger countSteps = new AtomicInteger(0);
-        String[] split = data[4].split("\\.");
-        for (int i = 0; i < split.length; i++) {
-            recipe.setDirections(countSteps.addAndGet(1), split[i]);
-        }
-
-        recipes.add(recipe);
-
-        for (int i = 1; i < recipes.size(); i++) {
-            if (recipes.get(i - 1).getName().equals(recipeName)) {
-                recipes.remove(recipe);
+        if (recipes.stream().anyMatch(r -> r.getName().equals(recipeName))){
+            return false;
+        }else {
+            recipe.setName(data[0]);
+            try {
+                recipe.setYield(Integer.parseInt(data[1]));
+                recipe.setPrepTime(Integer.parseInt(data[2]));
+            } catch (NumberFormatException e) {
+                System.err.println("Enter digit for yield and for preparation time");
             }
+            recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
+
+            AtomicInteger countSteps = new AtomicInteger(0);
+            String[] split = data[4].split("\\.");
+            for (int i = 0; i < split.length; i++) {
+                recipe.setDirections(countSteps.addAndGet(1), split[i]);
+            }
+
+            recipes.add(recipe);
+            return true;
         }
+
+
+//        for (int i = 1; i < recipes.size(); i++) {
+//            if (recipes.get(i - 1).getName().equals(recipeName)) {
+//                recipes.remove(recipe);
+//            }
+//        }
     }
 
 
