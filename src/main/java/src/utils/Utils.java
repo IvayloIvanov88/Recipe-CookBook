@@ -185,7 +185,7 @@ public class Utils {
                 case "desert recipe":
                 case "desert":
                 case "sweet":
-                    recipe = new DesertRecipe();
+                    recipe = new DessertRecipe();
                     return recipe;
                 case "alaminut recipe":
                 case "alaminut":
