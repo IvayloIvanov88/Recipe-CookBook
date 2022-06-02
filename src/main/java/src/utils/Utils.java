@@ -7,7 +7,6 @@ import src.recipe.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -36,7 +35,7 @@ public class Utils {
         } catch (IOException e) {
             System.err.println("File not found");
         } catch (IndexOutOfBoundsException e) {
-            System.err.println(" Index out of bounds");
+            System.err.println("Index out of bounds");
         }
     }
 
@@ -57,8 +56,7 @@ public class Utils {
         }
     }
     public static boolean isRecipeExist(List<String[]> fileData, String title) {
-        //removed for loop to avoid double iteration when using get() method
-        return fileData.stream().anyMatch((r -> r[0].equals(title)));
+        return fileData.stream().anyMatch((r -> r[0].equalsIgnoreCase(title)));
     }
 
     public static boolean isRecipeContainsRecipeWithSameName(List<Recipe> recipes, String recipeName) {

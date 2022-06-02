@@ -44,7 +44,16 @@ public class Demo {
                     break;
 
                 case "2":
-                    addNewRecipe(UNHIDDEN_RECIPE_PATH, unhiddenRecipeData, unhiddenRecipes, scanner);
+                    String recipeName = getUserChoose(scanner, "Enter recipe's name: ");
+                    //method should have one responsibility
+                    if (!Utils.isRecipeExist(unhiddenRecipeData, recipeName)) {
+                        String[] filesToAdd = getUsersChooseFileToAdd(scanner, recipeName);
+                        Utils.writeData(UNHIDDEN_RECIPE_PATH, filesToAdd);
+                        Utils.addOneRecipeInList(unhiddenRecipes, filesToAdd);
+                        System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
+                    } else {
+                        System.err.println("There is already such recipe");
+                    }
                     break;
 
                 case "3":
@@ -107,36 +116,23 @@ public class Demo {
         return scanner.nextLine();
     }
 
-    private static void addNewRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner ){
-        String recipeName = getUserChoose(scanner, "Enter recipe's name: ");
-
-        if (!Utils.isRecipeExist(fileData, recipeName)) {
-            String[] filesToAdd = getUsersChooseFileToAdd(scanner, recipeName);
-            Utils.writeData(UNHIDDEN_RECIPE_PATH, filesToAdd);
-            Utils.addOneRecipeInList(recipes, filesToAdd);
-            System.out.println("Recipe was added.");
-        } else {
-            System.err.println("There is already such recipe");
-        }
-    }
-
     private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner) {
 
         String recipeName = getUserChoose(scanner, "Choose recipe by name to change");
 
-        if (Utils.isRecipeExist(fileData, recipeName)) {
-            //delete previous record
+        if (Utils.isRecipeExist(fileData, recipeName) ||
+                Utils.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
+
             List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
             recipes.removeAll(recipeByName);
             String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
             int idx = fileData.indexOf(currentRecipe) + 1;
             Utils.deleteData(path, idx);
 
-            //add new record
             String[] usersChooseFileToAdd = getUsersChooseFileToAdd(scanner, recipeName);
             Utils.writeData(path, usersChooseFileToAdd);
             Utils.addOneRecipeInList(recipes, usersChooseFileToAdd);
-            System.out.println("Recipe edited successfully.");
+            System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
         } else {
             System.err.println("There is no such recipe");
         }
@@ -146,7 +142,7 @@ public class Demo {
     private static String[] getUsersChooseFileToAdd(Scanner scanner, String recipeName) {
         StringBuilder sb = new StringBuilder();
 
-        //System.out.println("Enter recipe`s name.");
+        System.out.println("Enter recipe`s name.");
         sb.append(recipeName).append(DELIMITER);
 
         System.out.println("How many portions ?");
