@@ -61,6 +61,10 @@ public class Utils {
         return fileData.stream().anyMatch((r -> r[0].equals(title)));
     }
 
+    public static boolean isRecipeContainsRecipeWithSameName(List<Recipe> recipes, String recipeName) {
+        return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
+    }
+
     public static List<String[]> readingCSV(String fileName) {
         List<String[]> allData = null;
         try {
@@ -84,30 +88,28 @@ public class Utils {
             nextLine = row;
 
             String recipeName = nextLine[0];
-            recipe = getRecipeType(recipeName);
 
-            recipe.setName(nextLine[0]);
+            if (!isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
+                recipe = getRecipeType(recipeName);
 
-            try {
-                recipe.setServing(Integer.parseInt(nextLine[1].trim()));
-                recipe.setPrepTime(Integer.parseInt(nextLine[2].trim()));
-            } catch (NumberFormatException e) {
-                System.err.println("Enter digits for serving and for preparation time");
-            }
-            recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
+                recipe.setName(nextLine[0]);
 
-            int countSteps = 1;
-            String[] split = nextLine[4].split("\n");
-            for (int i = 0; i < split.length; i++) {
-                recipe.setDirections(countSteps++, split[i]);
-            }
+                try {
+                    recipe.setServing(Integer.parseInt(nextLine[1].trim()));
+                    recipe.setPrepTime(Integer.parseInt(nextLine[2].trim()));
+                } catch (NumberFormatException e) {
+                    System.err.println("Enter digits for serving and for preparation time");
+                }
+
+                recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
+
+                int countSteps = 1;
+                String[] split = nextLine[4].split("\n");
+                for (int i = 0; i < split.length; i++) {
+                    recipe.setDirections(countSteps++, split[i]);
+                }
 
                 recipes.add(recipe);
-
-            for (int i = 1; i < recipes.size(); i++) {
-                if (recipes.get(i - 1).getName().equals(recipeName)) {
-                    recipes.remove(recipe);
-                }
             }
         }
     }
@@ -117,29 +119,27 @@ public class Utils {
         Recipe recipe;
 
         String recipeName = data[0];
-        recipe = getRecipeType(recipeName);
 
-        recipe.setName(data[0]);
-        try {
-            recipe.setServing(Integer.parseInt(data[1]));
-            recipe.setPrepTime(Integer.parseInt(data[2]));
-        } catch (NumberFormatException e) {
-            System.err.println("Enter digit for yield and for preparation time");
-        }
-        recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
+        if (!isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
 
-        AtomicInteger countSteps = new AtomicInteger(0);
-        String[] split = data[4].split("\\.");
-        for (int i = 0; i < split.length; i++) {
-            recipe.setDirections(countSteps.addAndGet(1), split[i]);
-        }
+            recipe = getRecipeType(recipeName);
 
-        recipes.add(recipe);
-
-        for (int i = 1; i < recipes.size(); i++) {
-            if (recipes.get(i - 1).getName().equals(recipeName)) {
-                recipes.remove(recipe);
+            recipe.setName(data[0]);
+            try {
+                recipe.setServing(Integer.parseInt(data[1]));
+                recipe.setPrepTime(Integer.parseInt(data[2]));
+            } catch (NumberFormatException e) {
+                System.err.println("Enter digit for yield and for preparation time");
             }
+            recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
+
+            int countSteps = 1;
+            String[] split = data[4].split("\\.");
+            for (int i = 0; i < split.length; i++) {
+                recipe.setDirections(countSteps++, split[i]);
+            }
+
+            recipes.add(recipe);
         }
     }
 

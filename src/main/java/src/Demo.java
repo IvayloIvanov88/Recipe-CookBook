@@ -55,6 +55,7 @@ public class Demo {
                     break;
 
                 case "3":
+                    listAllRecipesByName(unhiddenRecipes);
                     editRecipe(UNHIDDEN_RECIPE_PATH, unhiddenRecipeData, unhiddenRecipes, scanner);
                     break;
                 case "4":
@@ -84,7 +85,7 @@ public class Demo {
                     choose = getUserChoose(scanner, "How old are you, and don't lie ?");
 
                     if (validateUserAge(choose)) {
-                        System.out.println(ANSI_GREEN+"Welcome to the secret section with alcoholic beverages\n"+ANSI_RESET);
+                        System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages\n" + ANSI_RESET);
                         hiddenRecipes.forEach(System.out::println);
                     } else {
                         System.err.println("You are still very young");
@@ -108,8 +109,8 @@ public class Demo {
         System.out.println(message);
         return scanner.nextLine();
     }
-    private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner){
-        listAllRecipesByName(recipes);
+
+    private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner) {
 
         String choose = getUserChoose(scanner, "Choose recipe by name to change");
 
@@ -118,7 +119,7 @@ public class Demo {
             List<Recipe> recipeByName = getRecipeByName(recipes, choose);
             recipes.removeAll(recipeByName);
             String[] currentRecipe = fileData.stream().filter(r -> choose.equals(r[0])).findAny().orElse(null);
-            int idx = fileData.indexOf(currentRecipe)+1;
+            int idx = fileData.indexOf(currentRecipe) + 1;
             Utils.deleteData(path, idx);
 
             //add new record
