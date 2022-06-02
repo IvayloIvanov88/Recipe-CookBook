@@ -3,6 +3,7 @@ package src;
 
 import org.jetbrains.annotations.NotNull;
 import src.recipe.*;
+import src.utils.ConsoleArt;
 import src.utils.Utils;
 
 import java.util.*;
@@ -97,6 +98,10 @@ public class Demo {
             }
             showOptions();
         }
+        ConsoleArt artGen = new ConsoleArt();
+        artGen.draw("Good bye", 13, ANSI_GREEN + "#" + ANSI_RESET);
+        artGen.draw("Bon Apeti", 13, ANSI_RED + "#");
+
     }
 
 
