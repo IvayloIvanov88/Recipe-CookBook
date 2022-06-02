@@ -56,16 +56,9 @@ public class Utils {
             System.err.println("File not found");
         }
     }
-
-    public static boolean isRecipeExist(List<String[]> oldData, String[] files) {
-        for (int i = 0; i < oldData.size(); i++) {
-            String oldRecipeName = oldData.get(i)[0];
-            String newRecipeName = files[0];
-            if (oldRecipeName.equals(newRecipeName)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isRecipeExist(List<String[]> fileData, String title) {
+        //removed for loop to avoid double iteration when using get() method
+        return fileData.stream().anyMatch((r -> r[0].equals(title)));
     }
 
     public static List<String[]> readingCSV(String fileName) {

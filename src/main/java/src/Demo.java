@@ -44,31 +44,18 @@ public class Demo {
 
                 case "2":
                     String[] filesToAdd = getUsersChooseFileToAdd(scanner);
-                    if (!Utils.isRecipeExist(unhiddenRecipeData, filesToAdd)) {
+                    if (!Utils.isRecipeExist(unhiddenRecipeData, filesToAdd[0])) {
                         Utils.writeData(UNHIDDEN_RECIPE_PATH, filesToAdd);
                         Utils.addOneRecipeInList(unhiddenRecipes, filesToAdd);
                         System.out.println("Recipe was added.");
                     } else {
-                        System.err.println("There is such a recipe");
+                        System.err.println("There is already such recipe");
                     }
 
                     break;
 
                 case "3":
-                    listAllRecipesByName(unhiddenRecipes);
-
-                    choose = getUserChoose(scanner, "Choose recipe by name to change");
-
-                    String[] usersChooseFileToAdd = getUsersChooseFileToAdd(scanner);
-
-                    if (Utils.isRecipeExist(unhiddenRecipeData, usersChooseFileToAdd)) {
-                        List<Recipe> recipeByName = getRecipeByName(unhiddenRecipes, choose);
-                        unhiddenRecipes.removeAll(recipeByName);
-                        Utils.addOneRecipeInList(unhiddenRecipes, usersChooseFileToAdd);
-                        Utils.writeData(UNHIDDEN_RECIPE_PATH, usersChooseFileToAdd);
-                    } else {
-                        System.err.println("There is no such recipe");
-                    }
+                    editRecipe(UNHIDDEN_RECIPE_PATH, unhiddenRecipeData, unhiddenRecipes, scanner);
                     break;
                 case "4":
                     listAllRecipesByName(unhiddenRecipes);
@@ -120,6 +107,28 @@ public class Demo {
     private static String getUserChoose(Scanner scanner, String message) {
         System.out.println(message);
         return scanner.nextLine();
+    }
+    private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner){
+        listAllRecipesByName(recipes);
+
+        String choose = getUserChoose(scanner, "Choose recipe by name to change");
+
+        if (Utils.isRecipeExist(fileData, choose)) {
+            //delete previous record
+            List<Recipe> recipeByName = getRecipeByName(recipes, choose);
+            recipes.removeAll(recipeByName);
+            String[] currentRecipe = fileData.stream().filter(r -> choose.equals(r[0])).findAny().orElse(null);
+            int idx = fileData.indexOf(currentRecipe)+1;
+            Utils.deleteData(path, idx);
+
+            //add new record
+            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(scanner);
+            Utils.addOneRecipeInList(recipes, usersChooseFileToAdd);
+            Utils.writeData(path, usersChooseFileToAdd);
+            System.out.println("Recipe edited successfully.");
+        } else {
+            System.err.println("There is no such recipe");
+        }
     }
 
     @NotNull
