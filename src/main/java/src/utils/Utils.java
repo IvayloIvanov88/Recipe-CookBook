@@ -141,67 +141,26 @@ public class Utils {
         }
     }
 
+        private static Recipe getRecipeType(String name) {
 
-    private static Recipe getRecipeType(String name) {
+            Recipe recipe = null;
+            String[] fullName = name.split("\\s+");
+            String firstWordOfName;
+            RecipeSupplier recipeSupplier = new RecipeSupplier();
 
-        Recipe recipe;
-        String[] fullName = name.split("\\s+");
-        String firstWordOfName;
+            for (int i = 0; i < fullName.length; i++) {
+                firstWordOfName = fullName[i];
 
-        for (int i = 0; i < fullName.length; i++) {
-            firstWordOfName = fullName[i];
-
-            switch (firstWordOfName.toLowerCase().trim()) {
-                case "meat recipe":
-                case "meat":
-                case "pork":
-                case "chicken":
-                    recipe = new MeatRecipe();
+                recipe = recipeSupplier.supplyRecipe(firstWordOfName);
+                if (recipe != null) {
                     return recipe;
-                case "meatless recipe":
-                case "meatless":
-                case "no meat":
-                case "vegan":
-                case "without meat":
-                    recipe = new MeatlessRecipe();
-                    return recipe;
-                case "salad recipe":
-                case "salad":
-                    recipe = new SaladRecipe();
-                    return recipe;
-                case "soup recipe":
-                case "soup":
-                    recipe = new SoupRecipe();
-                    return recipe;
-                case "dessert recipe":
-                case "dessert":
-                case "sweet":
-                    recipe = new DessertRecipe();
-                    return recipe;
-                case "alaminut recipe":
-                case "alaminut":
-                    recipe = new AlaminutRecipe();
-                    return recipe;
-                case "pasta recipe":
-                case "bread":
-                case "pasta":
-                case "dough":
-                case "pancakes":
-                    recipe = new PastaRecipe();
-                    return recipe;
-                case "cocktail recipe":
-                case "cocktail":
-                case "drinks":
-                    recipe = new CocktailRecipe();
-                    return recipe;
-                default:
-
+                }
             }
+            if (recipe == null) {
+                System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Dessert, Pasta or Alaminut");
+                firstWordOfName = scanner.nextLine();
+                return getRecipeType(firstWordOfName);
+            }
+            return recipe;
         }
-        System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Desert, Pasta or Alaminut");
-        firstWordOfName = scanner.nextLine();
-        recipe = getRecipeType(firstWordOfName);
-        return recipe;
-    }
-
 }
