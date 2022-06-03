@@ -20,8 +20,9 @@ public class Demo {
     private static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
     private static final String DELIMITER = "delimiter";
 
+    private static final Scanner SCANNER = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
         List<Recipe> unhiddenRecipes = new ArrayList<>();
         List<Recipe> hiddenRecipes = new ArrayList<>();
@@ -35,7 +36,7 @@ public class Demo {
         showOptions();
 
         String choose = "";
-        while (!(choose = scanner.nextLine()).trim().equalsIgnoreCase("exit")) {
+        while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
 
             switch (choose) {
                 case "1":
@@ -44,53 +45,52 @@ public class Demo {
                     break;
 
                 case "2":
-                    String recipeName = getUserChoose(scanner, "Enter recipe's name: ");
-                    //method should have one responsibility
+                    String recipeName = getUserChoose(SCANNER, "Enter recipe's name: ");
                     if (!Utils.isRecipeExist(unhiddenRecipeData, recipeName)) {
-                        String[] filesToAdd = getUsersChooseFileToAdd(scanner, recipeName);
+                        String[] filesToAdd = getUsersChooseFileToAdd(SCANNER, recipeName);
                         Utils.writeData(UNHIDDEN_RECIPE_PATH, filesToAdd);
                         Utils.addOneRecipeInList(unhiddenRecipes, filesToAdd);
                         System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
                     } else {
-                        System.err.println("There is already such recipe");
+                        System.err.println("There is already such recipe.");
                     }
                     break;
 
                 case "3":
                     listAllRecipesByName(unhiddenRecipes);
-                    editRecipe(UNHIDDEN_RECIPE_PATH, unhiddenRecipeData, unhiddenRecipes, scanner);
+                    editRecipe(UNHIDDEN_RECIPE_PATH, unhiddenRecipeData, unhiddenRecipes, SCANNER);
                     break;
                 case "4":
                     listAllRecipesByName(unhiddenRecipes);
-                    choose = getUserChoose(scanner, "Choose number to delete");
+                    choose = getUserChoose(SCANNER, "Choose number to delete.");
                     try {
                         int userChoose = Integer.parseInt(choose);
                         Utils.deleteData(UNHIDDEN_RECIPE_PATH, userChoose);
                         unhiddenRecipes.remove(userChoose - 1);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                        System.err.println("Try with valid number");
+                        System.err.println("Try with valid number!");
                     }
 
                     break;
                 case "5":
                     listAllRecipesByName(unhiddenRecipes);
-                    choose = getUserChoose(scanner, "Enter recipe`s name. ");
+                    choose = getUserChoose(SCANNER, "Enter recipe`s name. ");
                     getRecipeByName(unhiddenRecipes, choose).forEach(System.out::println);
                     break;
 
                 case "6":
-                    choose = getUserChoose(scanner, "Enter recipe`s type\nChoose one : Meet, meatless, desert, salad, alaminut, pasta, soup or cocktail");
+                    choose = getUserChoose(SCANNER, "Enter recipe`s type\nChoose one : Meet, meatless, desert, salad, alaminut, pasta, soup or cocktail.");
                     getRecipeByFilter(unhiddenRecipes, choose).forEach(System.out::println);
                     break;
 
                 case "123":
-                    choose = getUserChoose(scanner, "How old are you, and don't lie ?");
+                    choose = getUserChoose(SCANNER, "How old are you, and don't lie ?");
 
                     if (validateUserAge(choose)) {
-                        System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages\n" + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" + ANSI_RESET);
                         hiddenRecipes.forEach(System.out::println);
                     } else {
-                        System.err.println("You are still very young");
+                        System.err.println("You are still very young!");
                     }
                     break;
                 default:
@@ -100,8 +100,8 @@ public class Demo {
             showOptions();
         }
         ConsoleArt artGen = new ConsoleArt();
-        artGen.draw("Good bye", 13, ANSI_GREEN + "#" + ANSI_RESET);
-        artGen.draw("Bon Appetit", 13, ANSI_RED + "#");
+        artGen.draw("Goodbye", 13, ANSI_GREEN + "$" + ANSI_RESET);
+        artGen.draw("Bon Appetit", 13, ANSI_RED + "#" + ANSI_RESET);
 
     }
 
@@ -118,7 +118,7 @@ public class Demo {
 
     private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner) {
 
-        String recipeName = getUserChoose(scanner, "Choose recipe by name to change");
+        String recipeName = getUserChoose(scanner, "Choose recipe by name to change.");
 
         if (Utils.isRecipeExist(fileData, recipeName) ||
                 Utils.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
@@ -134,7 +134,7 @@ public class Demo {
             Utils.addOneRecipeInList(recipes, usersChooseFileToAdd);
             System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
         } else {
-            System.err.println("There is no such recipe");
+            System.err.println("There is no such recipe.");
         }
     }
 
@@ -142,7 +142,6 @@ public class Demo {
     private static String[] getUsersChooseFileToAdd(Scanner scanner, String recipeName) {
         StringBuilder sb = new StringBuilder();
 
-        System.out.println("Enter recipe`s name.");
         sb.append(recipeName).append(DELIMITER);
 
         System.out.println("How many portions ?");
@@ -182,7 +181,7 @@ public class Demo {
 
     public static void showOptions() {
         System.out.println(PRINT_LINE +
-                "|\t\t" + ANSI_RED + "Welcome to Experian`s recipe book" + ANSI_RESET + "      |\n" +
+                "|\t\t" + ANSI_RED + "Welcome to Experian`s recipe book !" + ANSI_RESET + "    |\n" +
                 PRINT_LINE +
                 "|\t1. Read all recipes                        |\n" +
                 PRINT_LINE +
@@ -208,7 +207,7 @@ public class Demo {
             int age = Integer.parseInt(userChoose);
             return age >= 18;
         } catch (NumberFormatException e) {
-            System.err.println("Enter age in digits");
+            System.err.println("Enter age in digits.");
         }
         return false;
     }
