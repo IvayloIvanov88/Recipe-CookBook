@@ -27,12 +27,15 @@ public class Demo {
         List<Recipe> unhiddenRecipes = new ArrayList<>();
         List<Recipe> hiddenRecipes = new ArrayList<>();
 
-        List<String[]> unhiddenRecipeData = CsvOperation.readFromCSV(UNHIDDEN_RECIPE_PATH);
-        List<String[]> hiddenRecipeData = CsvOperation.readFromCSV(HIDDEN_RECIPE_PATH);
+        List<String[]> unhiddenRecipesData = CsvOperation.readFromCSV(UNHIDDEN_RECIPE_PATH);
+        List<String[]> hiddenRecipesData = CsvOperation.readFromCSV(HIDDEN_RECIPE_PATH);
 
-        RecipeOperation.addRecipeInList(unhiddenRecipes, unhiddenRecipeData);
-        RecipeOperation.addRecipeInList(hiddenRecipes, hiddenRecipeData);
+        RecipeOperation.addRecipesInList(unhiddenRecipes, unhiddenRecipesData);
+        RecipeOperation.addRecipesInList(hiddenRecipes, hiddenRecipesData);
 
+        String defaultRecipesPath = UNHIDDEN_RECIPE_PATH;
+        List<Recipe> defaultRecipes = unhiddenRecipes;
+        List<String[]> defaultRecipesData = unhiddenRecipesData;
         showOptions();
 
         String choose = "";
@@ -41,15 +44,15 @@ public class Demo {
             switch (choose) {
                 case "1":
                     AtomicInteger count = new AtomicInteger(0);
-                    unhiddenRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
+                    defaultRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
                     break;
 
                 case "2":
-                    String recipeName = getUserChoose(SCANNER, "Enter recipe's name: ");
-                    if (!RecipeOperation.isRecipeExist(unhiddenRecipeData, recipeName)) {
-                        String[] filesToAddInCSV = getUsersChooseFileToAdd(SCANNER, recipeName);
-                        CsvOperation.writeInCSV(UNHIDDEN_RECIPE_PATH, filesToAddInCSV);
-                        RecipeOperation.addOneRecipeInList(unhiddenRecipes, filesToAddInCSV);
+                    String recipeName = getUserChoose("Enter recipe's name: ");
+                    if (!RecipeOperation.isRecipeExist(defaultRecipesData, recipeName)) {
+                        String[] filesToAddInCSV = getUsersChooseFileToAdd(recipeName);
+                        CsvOperation.writeInCSV(defaultRecipesPath, filesToAddInCSV);
+                        RecipeOperation.addOneRecipeInList(defaultRecipes, filesToAddInCSV);
                         System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
                     } else {
                         System.err.println("There is already such recipe.");
@@ -57,44 +60,55 @@ public class Demo {
                     break;
 
                 case "3":
-                    listAllRecipesByName(unhiddenRecipes);
-                    editRecipe(UNHIDDEN_RECIPE_PATH, unhiddenRecipeData, unhiddenRecipes, SCANNER);
+                    listAllRecipesByName(defaultRecipes);
+                    editRecipe(defaultRecipesPath, defaultRecipesData, defaultRecipes);
                     break;
                 case "4":
-                    listAllRecipesByName(unhiddenRecipes);
-                    choose = getUserChoose(SCANNER, "Choose number to delete.");
+                    listAllRecipesByName(defaultRecipes);
+                    choose = getUserChoose("Choose number to delete.");
                     try {
                         int userChoose = Integer.parseInt(choose);
-                        CsvOperation.deleteFromCSV(UNHIDDEN_RECIPE_PATH, userChoose);
-                        unhiddenRecipes.remove(userChoose - 1);
+                        CsvOperation.deleteFromCSV(defaultRecipesPath, userChoose);
+                        defaultRecipes.remove(userChoose - 1);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
                         System.err.println("Try with valid number!");
                     }
 
                     break;
                 case "5":
-                    listAllRecipesByName(unhiddenRecipes);
-                    choose = getUserChoose(SCANNER, "Enter recipe`s name. ");
-                    getRecipeByName(unhiddenRecipes, choose).forEach(System.out::println);
+                    listAllRecipesByName(defaultRecipes);
+                    choose = getUserChoose("Enter recipe`s name. ");
+                    getRecipeByName(defaultRecipes, choose).forEach(System.out::println);
                     break;
 
                 case "6":
-                    choose = getUserChoose(SCANNER, "Enter recipe`s type\nChoose one : Meet, meatless, desert, salad, alaminut, pasta, soup or cocktail.");
-                    getRecipeByFilter(unhiddenRecipes, choose).forEach(System.out::println);
+                    choose = getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, desert, salad, alaminut, pasta, soup.");
+                    getRecipeByFilter(defaultRecipes, choose).forEach(System.out::println);
                     break;
 
                 case "123":
-                    choose = getUserChoose(SCANNER, "How old are you, and don't lie ?");
+                    choose = getUserChoose("How old are you, and don't lie ?");
 
                     if (validateUserAge(choose)) {
-                        System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" + ANSI_RESET);
-                        hiddenRecipes.forEach(System.out::println);
+                        System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" +
+                                "to go back, just type 'back' " + ANSI_RESET);
                     } else {
                         System.err.println("You are still very young!");
+                        break;
                     }
+                    defaultRecipesPath = HIDDEN_RECIPE_PATH;
+                    defaultRecipes = hiddenRecipes;
+                    defaultRecipesData = hiddenRecipesData;
+
+                    break;
+                case "back":
+                    System.out.println(ANSI_GREEN +"You are back to normal, unhidden recipes."+ ANSI_RESET);
+                    defaultRecipesPath = UNHIDDEN_RECIPE_PATH;
+                    defaultRecipes = unhiddenRecipes;
+                    defaultRecipesData = unhiddenRecipesData;
                     break;
                 default:
-                    System.err.println("Try again, read carefully options. ");
+                    System.out.println(ANSI_GREEN + "Try again, read carefully options." + ANSI_RESET);
 
             }
             showOptions();
@@ -106,15 +120,14 @@ public class Demo {
     }
 
 
-
-    private static String getUserChoose(Scanner scanner, String message) {
+    private static String getUserChoose(String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
-        return scanner.nextLine();
+        return Demo.SCANNER.nextLine();
     }
 
-    private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, Scanner scanner) {
+    private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
 
-        String recipeName = getUserChoose(scanner, "Choose recipe by name to change.");
+        String recipeName = getUserChoose("Choose recipe by name to change.");
 
         if (RecipeOperation.isRecipeExist(fileData, recipeName) ||
                 RecipeOperation.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
@@ -125,7 +138,7 @@ public class Demo {
             int idx = fileData.indexOf(currentRecipe) + 1;
             CsvOperation.deleteFromCSV(path, idx);
 
-            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(scanner, recipeName);
+            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(recipeName);
             CsvOperation.writeInCSV(path, usersChooseFileToAdd);
             RecipeOperation.addOneRecipeInList(recipes, usersChooseFileToAdd);
             System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
@@ -135,26 +148,26 @@ public class Demo {
     }
 
     @NotNull
-    private static String[] getUsersChooseFileToAdd(Scanner scanner, String recipeName) {
+    private static String[] getUsersChooseFileToAdd(String recipeName) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(recipeName).append(DELIMITER);
 
         System.out.println("How many portions ?");
-        String toAppendYield = scanner.nextLine();
+        String toAppendYield = Demo.SCANNER.nextLine();
         sb.append(toAppendYield).append(DELIMITER);
 
         System.out.println("Preparation time ?");
-        String toAppendPreparationTime = scanner.nextLine();
+        String toAppendPreparationTime = Demo.SCANNER.nextLine();
         sb.append(toAppendPreparationTime).append(DELIMITER);
 
         System.out.println("What are ingredients ?");
-        String toAppendIngredients = scanner.nextLine();
+        String toAppendIngredients = Demo.SCANNER.nextLine();
         sb.append(toAppendIngredients).append(DELIMITER);
 
         System.out.println("What are the preparation steps ?");
 
-        String toAppendThirdStep = scanner.nextLine();
+        String toAppendThirdStep = Demo.SCANNER.nextLine();
         sb.append(toAppendThirdStep).append(DELIMITER);
 
         return sb.toString().split(DELIMITER);

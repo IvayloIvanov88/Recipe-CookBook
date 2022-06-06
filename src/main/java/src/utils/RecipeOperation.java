@@ -41,7 +41,7 @@ public class RecipeOperation {
         return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
     }
 
-    public static void addRecipeInList(List<Recipe> recipes, List<String[]> allData) {
+    public static void addRecipesInList(List<Recipe> recipes, List<String[]> allData) {
         Recipe recipe;
         String[] nextLine;
         for (String[] row : allData) {
