@@ -42,6 +42,8 @@ public class RecipeSupplier {
         recipesType.put("pancakes", PastaRecipe::new);
 
         recipesType.put("cocktail", CocktailRecipe::new);
+        recipesType.put("cocktails", CocktailRecipe::new);
+        recipesType.put("drink", CocktailRecipe::new);
         recipesType.put("drinks", CocktailRecipe::new);
 
         RECIPE_SUPPLIER = Collections.unmodifiableMap(recipesType);

@@ -3,8 +3,8 @@ package src.recipe;
 import java.util.*;
 
 import static java.lang.String.format;
-import static src.utils.Utils.ANSI_RED;
-import static src.utils.Utils.ANSI_RESET;
+import static src.utils.RecipeOperation.ANSI_RED;
+import static src.utils.RecipeOperation.ANSI_RESET;
 
 public abstract class Recipe {
     private String name;
@@ -49,7 +49,7 @@ public abstract class Recipe {
                         ANSI_RED + "Time for preparation: " + ANSI_RESET + "%d min.\n" +
                         ANSI_RED + "Preparation:" + ANSI_RESET + "\n%s",
                 this.name,
-                String.join(", ", this.ingredient),
+                String.join(",", this.ingredient),
                 this.serving,
                 this.prepTime,
                 getPreparationAsString());

@@ -1,9 +1,9 @@
-recipe_name,yield,preparation_time,ingredients,first_step_preparation
-Easter bread,4,120,"Flour, eggs, salt, sugar, milk, oil","pick all products
+"recipe_name","yield","preparation_time","ingredients","first_step_preparation"
+"Easter bread","4","120","Flour, eggs, salt, sugar, milk, oil","pick all products
 Mix all the products and leave the dough for one hour to rise
 bake in oven for one hour
 Enjoy"
-Easy basic pancakes,4,30,"1 cup all-purpose flour
+"Easy basic pancakes","4","30","1 cup all-purpose flour
 2 tablespoons sugar
 2 teaspoons baking powder
 1/2 teaspoon salt
@@ -23,7 +23,7 @@ Flip carefully with a thin spatula, and cook until browned on the underside, 1 t
 Transfer to a baking sheet or platter; cover loosely with aluminum foil, and keep warm in oven.
 Continue with more oil and remaining batter. (You'll have 12 to 15 pancakes.)
 Serve warm, with desired toppings."
-Greek Moussaka with meat,2,15,"6 tbsp olive oil
+"Greek Moussaka with meat","2","15","6 tbsp olive oil
 3 medium aubergines, cut into 5mm rounds
 800g lamb mince
 1 onion, finely chopped
@@ -49,7 +49,7 @@ Stir through the tomatoes,tomato pure and brown sugar, along with 200ml water. S
 Lower the heat and simmer gently, uncovered,for 20 mins, stirring occasionally until the sauce has thickened.
 Heat oven to 200C/180 fan/gas 4. Bring a large pan of lightly salted water to the boil.
 Add the potato slices and cook for 6 mins, drain in a colander and leave to steam dry for 10 mins."
-Crispiest ever roast potatoes meatless,6,20,"4 tbsp rapeseed oil
+"Crispiest ever roast potatoes meatless","6","20","4 tbsp rapeseed oil
 1 kg Maris Piper potatoes , cut into quarters, peelings reserved
 50g butter
 1/2 bunch of lemon thyme
@@ -64,7 +64,7 @@ add the potatoes to the tray, one by one, carefully turning them in the fat,
 and leaving a little space between them. Reduce the oven to 200C/180C fan/gas 6.
 Nestle the lemon thyme in amongst the potatoes, along with the garlic.
 Sprinkle over the sea salt and return to the oven to roast for 1 hr, turning every once in a while, until golden and crisp."
-Pork medallions,4,15,"1 tbsp olive oil
+"Pork medallions","4","15","1 tbsp olive oil
 600g pork medallions
 2 tbsp unsalted butter
 2 banana shallots , thinly sliced
@@ -85,7 +85,7 @@ Add the thyme and mustard and season to taste.
 Return the pork to the pan and simmer uncovered for 5-7 mins.
  Stir through the cream and heat again until simmering.
 Serve with creamy mashed potatoes and wilted greens."
-Classic potted shrimps alaminut,5,10,"100g unsalted butter
+"Classic potted shrimps alaminut","5","10","100g unsalted butter
 2 pinches of cayenne pepper
 a generous grating of nutmeg
 350g cooked and peeled North Atlantic prawns or shrimps
@@ -99,7 +99,7 @@ Return to the fridge to set overnight.
 Before serving, heat oven to 200C/180C fan/gas 6.
 Cut the ciabatta into thin slices, drizzle with olive oil and toast on a tray in the oven.
 Once golden, arrange on a serving board with the potted prawns and lemon wedges alongside."
-Eggs benedict alaminut,4,10,"3 tbsp white wine vinegar
+"Eggs benedict alaminut","4","10","3 tbsp white wine vinegar
 4 free-range eggs
 2 toasting muffins
 4 parma ham
@@ -114,7 +114,7 @@ It will curl round and set to a neat round shape. Cook for 2-3 mins, then remove
 3 tbsp white wine vinegar. Lower the heat down to a gentle simmer.
 Break the eggs into four separate coffee cups or ramekins.
 Split the muffins, toast them for a few minutes either side and warm some plates."
-Jam tarts dessert,5,25,"250g plain flour, plus extra for dusting
+"Jam tarts dessert","5","25","250g plain flour, plus extra for dusting
 125g butter, chilled and diced, plus extra for the tin
 1 medium egg
 1 vanilla pod, seeds scraped (optional)
@@ -130,7 +130,7 @@ Dollop 1-2 tsp of your chosen filling into each one and, if you like,
 cut out little pastry hearts (perfect for Valentine's Day) and pop them on top.
 Bake for 15-18 mins or until golden and the filling is starting to bubble a little.
 Leave to cool in the tin for a few mins then carefully transfer to a wire rack to cool completely."
-Chicken Caesar salad,4,15,"1 medium ciabatta loaf (or 4 thick slices crusty white bread)
+"Chicken Caesar salad","4","15","1 medium ciabatta loaf (or 4 thick slices crusty white bread)
 3 tbsp olive oil
 2 skinless, boneless chicken breasts
 1 large cos or romaine lettuce, leaves separated
@@ -146,7 +146,7 @@ Place pan over a medium heat for 1 min, until hot, but not smoking.
 Lay the chicken on the pan (it will sizzle if it’s hot enough) and leave for 4 mins.
 Add most of the dressing and toss with your fingers. Scatter the rest of the chicken and croutons,
 then drizzle with the remaining dressing. Sprinkle the parmesan on top and serve straight away."
-Peach & raspberry fruit dessert salad with mascarpone,4,10,"2 ripe peaches or nectarines
+"Peach & raspberry fruit dessert salad with mascarpone","4","10","2 ripe peaches or nectarines
 50g caster sugar
 1 tsp lemon thyme leaves
 100g mascarpone
@@ -159,8 +159,3 @@ Sprinkle over a little of the sugar and scatter over most of the thyme leaves.
 Whisk together the mascarpone, cream, vanilla extract and the remaining sugar in a bowl until light and fluffy.
 Spoon or pipe blobs of the mixture over the peaches or nectarines and arrange the raspberries over the plates.
 Finish with a scattering of pistachios, the remaining thyme leaves and a drizzle of maple syrup to serve."
-Lemon citronade cocktail,2,5,"1-2 Lime, sugar,soda or Sprite","Remove peel and pith of lemons with a paring knife.
-Slice in half and squeeze lemons, place in large bowl.
-Add sugar and shake around.
-Ìix the resulting mixture with sprite îr soda
-Dring now and enjoy."

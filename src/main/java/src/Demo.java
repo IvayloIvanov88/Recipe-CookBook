@@ -4,13 +4,14 @@ package src;
 import org.jetbrains.annotations.NotNull;
 import src.recipe.*;
 import src.utils.ConsoleArt;
-import src.utils.Utils;
+import src.utils.CsvOperation;
+import src.utils.RecipeOperation;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static src.utils.Utils.*;
+import static src.utils.RecipeOperation.*;
 
 public class Demo {
 
@@ -27,11 +28,11 @@ public class Demo {
         List<Recipe> unhiddenRecipes = new ArrayList<>();
         List<Recipe> hiddenRecipes = new ArrayList<>();
 
-        List<String[]> unhiddenRecipeData = Utils.readingCSV(UNHIDDEN_RECIPE_PATH);
-        List<String[]> hiddenRecipeData = Utils.readingCSV(HIDDEN_RECIPE_PATH);
+        List<String[]> unhiddenRecipeData = CsvOperation.readFromCSV(UNHIDDEN_RECIPE_PATH);
+        List<String[]> hiddenRecipeData = CsvOperation.readFromCSV(HIDDEN_RECIPE_PATH);
 
-        Utils.creatingRecipeList(unhiddenRecipes, unhiddenRecipeData);
-        Utils.creatingRecipeList(hiddenRecipes, hiddenRecipeData);
+        RecipeOperation.creatingRecipeList(unhiddenRecipes, unhiddenRecipeData);
+        RecipeOperation.creatingRecipeList(hiddenRecipes, hiddenRecipeData);
 
         showOptions();
 
@@ -46,10 +47,10 @@ public class Demo {
 
                 case "2":
                     String recipeName = getUserChoose(SCANNER, "Enter recipe's name: ");
-                    if (!Utils.isRecipeExist(unhiddenRecipeData, recipeName)) {
+                    if (!RecipeOperation.isRecipeExist(unhiddenRecipeData, recipeName)) {
                         String[] filesToAdd = getUsersChooseFileToAdd(SCANNER, recipeName);
-                        Utils.writeData(UNHIDDEN_RECIPE_PATH, filesToAdd);
-                        Utils.addOneRecipeInList(unhiddenRecipes, filesToAdd);
+                        CsvOperation.writeInCSV(UNHIDDEN_RECIPE_PATH, filesToAdd);
+                        RecipeOperation.addOneRecipeInList(unhiddenRecipes, filesToAdd);
                         System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
                     } else {
                         System.err.println("There is already such recipe.");
@@ -65,7 +66,7 @@ public class Demo {
                     choose = getUserChoose(SCANNER, "Choose number to delete.");
                     try {
                         int userChoose = Integer.parseInt(choose);
-                        Utils.deleteData(UNHIDDEN_RECIPE_PATH, userChoose);
+                        CsvOperation.deleteFromCSV(UNHIDDEN_RECIPE_PATH, userChoose);
                         unhiddenRecipes.remove(userChoose - 1);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
                         System.err.println("Try with valid number!");
@@ -112,7 +113,7 @@ public class Demo {
     }
 
     private static String getUserChoose(Scanner scanner, String message) {
-        System.out.println(message);
+        System.out.println(ANSI_RED + message + ANSI_RESET);
         return scanner.nextLine();
     }
 
@@ -120,18 +121,18 @@ public class Demo {
 
         String recipeName = getUserChoose(scanner, "Choose recipe by name to change.");
 
-        if (Utils.isRecipeExist(fileData, recipeName) ||
-                Utils.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
+        if (RecipeOperation.isRecipeExist(fileData, recipeName) ||
+                RecipeOperation.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
 
             List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
             recipes.removeAll(recipeByName);
             String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
             int idx = fileData.indexOf(currentRecipe) + 1;
-            Utils.deleteData(path, idx);
+            CsvOperation.deleteFromCSV(path, idx);
 
             String[] usersChooseFileToAdd = getUsersChooseFileToAdd(scanner, recipeName);
-            Utils.writeData(path, usersChooseFileToAdd);
-            Utils.addOneRecipeInList(recipes, usersChooseFileToAdd);
+            CsvOperation.writeInCSV(path, usersChooseFileToAdd);
+            RecipeOperation.addOneRecipeInList(recipes, usersChooseFileToAdd);
             System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
         } else {
             System.err.println("There is no such recipe.");
