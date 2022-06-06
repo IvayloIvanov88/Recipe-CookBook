@@ -9,7 +9,6 @@ import src.utils.RecipeOperation;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static src.utils.RecipeOperation.*;
 
@@ -31,8 +30,8 @@ public class Demo {
         List<String[]> unhiddenRecipeData = CsvOperation.readFromCSV(UNHIDDEN_RECIPE_PATH);
         List<String[]> hiddenRecipeData = CsvOperation.readFromCSV(HIDDEN_RECIPE_PATH);
 
-        RecipeOperation.creatingRecipeList(unhiddenRecipes, unhiddenRecipeData);
-        RecipeOperation.creatingRecipeList(hiddenRecipes, hiddenRecipeData);
+        RecipeOperation.addRecipeInList(unhiddenRecipes, unhiddenRecipeData);
+        RecipeOperation.addRecipeInList(hiddenRecipes, hiddenRecipeData);
 
         showOptions();
 
@@ -48,9 +47,9 @@ public class Demo {
                 case "2":
                     String recipeName = getUserChoose(SCANNER, "Enter recipe's name: ");
                     if (!RecipeOperation.isRecipeExist(unhiddenRecipeData, recipeName)) {
-                        String[] filesToAdd = getUsersChooseFileToAdd(SCANNER, recipeName);
-                        CsvOperation.writeInCSV(UNHIDDEN_RECIPE_PATH, filesToAdd);
-                        RecipeOperation.addOneRecipeInList(unhiddenRecipes, filesToAdd);
+                        String[] filesToAddInCSV = getUsersChooseFileToAdd(SCANNER, recipeName);
+                        CsvOperation.writeInCSV(UNHIDDEN_RECIPE_PATH, filesToAddInCSV);
+                        RecipeOperation.addOneRecipeInList(unhiddenRecipes, filesToAddInCSV);
                         System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
                     } else {
                         System.err.println("There is already such recipe.");
@@ -107,10 +106,6 @@ public class Demo {
     }
 
 
-    private static void listAllRecipesByName(List<Recipe> unhiddenRecipes) {
-        AtomicInteger countRecipe = new AtomicInteger(0);
-        unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
-    }
 
     private static String getUserChoose(Scanner scanner, String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
@@ -164,20 +159,6 @@ public class Demo {
 
         return sb.toString().split(DELIMITER);
 
-    }
-
-
-    private static List<Recipe> getRecipeByName(List<Recipe> recipes, String filter) {
-        return recipes.stream()
-                .filter(r -> Objects.equals(r.getName().toLowerCase(), filter.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    private static List<Recipe> getRecipeByFilter(List<Recipe> recipes, String filter) {
-
-        return recipes.stream()
-                .filter(r -> Objects.equals(r.getClass().getSimpleName().toLowerCase(), (filter + "recipe").toLowerCase()))
-                .collect(Collectors.toList());
     }
 
     public static void showOptions() {

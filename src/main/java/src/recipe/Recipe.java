@@ -8,10 +8,10 @@ import static src.utils.RecipeOperation.ANSI_RESET;
 
 public abstract class Recipe {
     private String name;
-    private List<String> ingredient;
+    private final List<String> ingredient;
     private int serving;
     private int prepTime;
-    private Map<Integer, String> directions;
+    private final Map<Integer, String> directions;
 
     protected Recipe(String name, int serving, int prepTime) {
         this.setName(name);
@@ -56,7 +56,7 @@ public abstract class Recipe {
 
     }
 
-    protected StringBuilder getPreparationAsString() {
+    private StringBuilder getPreparationAsString() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, String> entry : this.directions.entrySet()) {
             sb.append(String.format(ANSI_RED + "\tStep: %d " + ANSI_RESET + "-> %s\n", entry.getKey(), entry.getValue()));

@@ -3,6 +3,7 @@ package src.utils;
 import src.recipe.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class RecipeOperation {
@@ -14,6 +15,24 @@ public class RecipeOperation {
     private RecipeOperation() {
     }
 
+    public static List<Recipe> getRecipeByName(List<Recipe> recipes, String filter) {
+        return recipes.stream()
+                .filter(r -> Objects.equals(r.getName().toLowerCase(), filter.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Recipe> getRecipeByFilter(List<Recipe> recipes, String filter) {
+
+        return recipes.stream()
+                .filter(r -> Objects.equals(r.getClass().getSimpleName().toLowerCase(), (filter + "recipe").toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public static void listAllRecipesByName(List<Recipe> unhiddenRecipes) {
+        AtomicInteger countRecipe = new AtomicInteger(0);
+        unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
+    }
+
     public static boolean isRecipeExist(List<String[]> fileData, String title) {
         return fileData.stream().anyMatch((r -> r[0].equalsIgnoreCase(title)));
     }
@@ -22,7 +41,7 @@ public class RecipeOperation {
         return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
     }
 
-    public static void creatingRecipeList(List<Recipe> recipes, List<String[]> allData) {
+    public static void addRecipeInList(List<Recipe> recipes, List<String[]> allData) {
         Recipe recipe;
         String[] nextLine;
         for (String[] row : allData) {
@@ -45,7 +64,7 @@ public class RecipeOperation {
                 recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
 
                 int countSteps = 1;
-                String[] split = nextLine[4].split("\n");
+                String[] split = nextLine[4].split("\\R");
                 for (String s : split) {
                     recipe.setDirections(countSteps++, s);
                 }
@@ -54,7 +73,6 @@ public class RecipeOperation {
             }
         }
     }
-
 
     public static void addOneRecipeInList(List<Recipe> recipes, String[] data) {
         Recipe recipe;
@@ -75,7 +93,7 @@ public class RecipeOperation {
             recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
 
             int countSteps = 1;
-            String[] split = data[4].split("\\.");
+            String[] split = data[4].split("\\.\\s+");
             for (String s : split) {
                 recipe.setDirections(countSteps++, s);
             }
