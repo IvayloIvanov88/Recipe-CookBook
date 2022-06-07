@@ -5,7 +5,7 @@ import src.recipe.*;
 import src.utils.ConsoleArt;
 import src.utils.CsvOperation;
 import src.utils.RecipeOperation;
-import user.User;
+import src.user.User;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static src.utils.Menu.showOptions;
 import static src.utils.RecipeOperation.*;
 import static src.utils.RecipeOperation.getRecipeByName;
-import static user.User.*;
+import static src.user.User.*;
 
 public class Demo {
 

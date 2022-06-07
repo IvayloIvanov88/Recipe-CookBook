@@ -1,7 +1,6 @@
-package user;
+package src.user;
 
 import org.jetbrains.annotations.NotNull;
-import src.Demo;
 
 import java.util.Scanner;
 
