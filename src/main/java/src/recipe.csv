@@ -1,8 +1,5 @@
 recipe_name,yield,preparation_time,ingredients,first_step_preparation,rating,vote_count
-Easter bread,4,120,"Flour, eggs, salt, sugar, milk, oil","pick all products
-Mix all the products and leave the dough for one hour to rise
-bake in oven for one hour
-Enjoy",30,5
+Easter bread,4,120,"Flour, eggs, salt, sugar, milk, oil",pick all products. Mix all the products and leave the dough for one hour to rise. Bake in oven for one hour.,30,5
 Easy basic pancakes,4,30,"1 cup all-purpose flour
 2 tablespoons sugar
 2 teaspoons baking powder
@@ -12,7 +9,7 @@ Easy basic pancakes,4,30,"1 cup all-purpose flour
 1 large egg
 1 tablespoon vegetable oil
 Assorted toppings, such as butter, maple syrup, confectioners' sugar, honey, jams, preserves, sweetened whipped cream, or chocolate syrup
-","Preheat oven to 200 degrees; have a baking sheet or heatproof platter ready to keep cooked pancakes warm in the oven.
+","Preheat oven to 200 degrees, have a baking sheet or heatproof platter ready to keep cooked pancakes warm in the oven.
 In a small bowl, whisk together flour, sugar, baking powder, and salt set aside.
  In a medium bowl, whisk together milk,butter (or oil), and egg. Add dry ingredients to milk mixture; whisk until just moistened.
 Heat a large skillet (nonstick or cast-iron) or griddle over medium.
@@ -159,4 +156,3 @@ Sprinkle over a little of the sugar and scatter over most of the thyme leaves.
 Whisk together the mascarpone, cream, vanilla extract and the remaining sugar in a bowl until light and fluffy.
 Spoon or pipe blobs of the mixture over the peaches or nectarines and arrange the raspberries over the plates.
 Finish with a scattering of pistachios, the remaining thyme leaves and a drizzle of maple syrup to serve.",25,5
-meat,1,1,1,1,10,2
