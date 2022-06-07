@@ -64,9 +64,18 @@ public class RecipeOperation {
                 recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
 
                 int countSteps = 1;
-                String[] split = nextLine[4].split("\\R");
+                String[] split = nextLine[4].split("\\.\\s+");
                 for (String s : split) {
                     recipe.setDirections(countSteps++, s);
+                }
+                try {
+                    recipe.setRating(Double.parseDouble(nextLine[5]));
+                    recipe.setVoteCount(Integer.parseInt(nextLine[6]));
+                } catch (NumberFormatException e) {
+                    System.err.println("Enter digit in range 0 - 6");
+                }catch (ArrayIndexOutOfBoundsException e){
+                    recipe.setRating(Double.parseDouble("0.00"));
+                    recipe.setVoteCount(Integer.parseInt("0"));
                 }
 
                 recipes.add(recipe);
@@ -97,6 +106,15 @@ public class RecipeOperation {
             for (String s : split) {
                 recipe.setDirections(countSteps++, s);
             }
+            try {
+                recipe.setRating(Double.parseDouble(data[5]));
+                recipe.setVoteCount(Integer.parseInt(data[6]));
+            } catch (NumberFormatException e) {
+                System.err.println("Enter digit in range 0 - 6");
+            }catch (ArrayIndexOutOfBoundsException e){
+                recipe.setRating(Double.parseDouble("0.00"));
+                recipe.setVoteCount(Integer.parseInt("0"));
+            }
 
             recipes.add(recipe);
         }
@@ -121,4 +139,5 @@ public class RecipeOperation {
         firstWordOfName = scanner.nextLine();
         return getRecipeType(firstWordOfName);
     }
+
 }

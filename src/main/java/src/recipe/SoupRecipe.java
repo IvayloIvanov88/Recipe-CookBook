@@ -3,8 +3,8 @@ package src.recipe;
 
 public class SoupRecipe extends Recipe{
 
-    public SoupRecipe(String name, int serving, int prepTime) {
-        super(name, serving, prepTime);
+    public SoupRecipe(String name, int serving, int prepTime, double rating, int voteCount) {
+        super(name, serving, prepTime, rating, voteCount);
     }
 
     public SoupRecipe() {

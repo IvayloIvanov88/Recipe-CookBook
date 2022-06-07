@@ -11,12 +11,19 @@ public abstract class Recipe {
     private final List<String> ingredient;
     private int serving;
     private int prepTime;
+    private int voteCount;
+    private double rating;
+    private double userRating = 0;
+
+
     private final Map<Integer, String> directions;
 
-    protected Recipe(String name, int serving, int prepTime) {
+    protected Recipe(String name, int serving, int prepTime, double rating, int voteCount) {
         this.setName(name);
         this.setServing(serving);
         this.setPrepTime(prepTime);
+        this.setRating(rating);
+        this.setVoteCount(voteCount);
         this.ingredient = new ArrayList<>();
         this.directions = new HashMap<>();
     }
@@ -43,11 +50,13 @@ public abstract class Recipe {
     public String toString() {
 
         return format(
-                ANSI_RED + "Recipe name is: " + ANSI_RESET + "%s\n" +
+                ANSI_RED + "Rating: " + ANSI_RESET + "%.2f\n" +
+                        ANSI_RED + "Recipe name is: " + ANSI_RESET + "%s\n" +
                         ANSI_RED + "ingredients are:\n" + ANSI_RESET + "%s.\n" +
                         ANSI_RED + "for: " + ANSI_RESET + "%d portions.\n" +
                         ANSI_RED + "Time for preparation: " + ANSI_RESET + "%d min.\n" +
                         ANSI_RED + "Preparation:" + ANSI_RESET + "\n%s",
+                calcAvgRating(),
                 this.name,
                 String.join(",", this.ingredient),
                 this.serving,
@@ -114,6 +123,45 @@ public abstract class Recipe {
             System.err.println("The Recipe should have positive preparation time.");
         } else {
             this.prepTime = prepTime;
+        }
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        if (voteCount < 0) {
+            System.err.println("Voters must be a positive number.");
+        } else {
+            this.voteCount = voteCount;
+        }
+
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating += rating;
+    }
+
+    public double calcAvgRating() {
+        if (voteCount > 0) {
+            return this.rating / this.voteCount;
+        } else {
+            return 0;
+        }
+    }
+
+    public void setUserRating(int userRating) {
+        if (userRating < 0 || userRating > 6) {
+            System.err.println("Rating must be a positive number between 0 and 6.");
+        } else {
+//            this.userRating = userRating;
+            this.voteCount++;
+            this.setRating(userRating);
         }
     }
 

@@ -9,8 +9,10 @@ import src.utils.RecipeOperation;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static src.utils.RecipeOperation.*;
+import static src.utils.RecipeOperation.getRecipeByName;
 
 public class Demo {
 
@@ -50,7 +52,7 @@ public class Demo {
                 case "2":
                     String recipeName = getUserChoose("Enter recipe's name: ");
                     if (!RecipeOperation.isRecipeExist(defaultRecipesData, recipeName)) {
-                        String[] filesToAddInCSV = getUsersChooseFileToAdd(recipeName);
+                        String[] filesToAddInCSV = getUsersChooseFileToAdd(recipeName, 0, 0);
                         CsvOperation.writeInCSV(defaultRecipesPath, filesToAddInCSV);
                         RecipeOperation.addOneRecipeInList(defaultRecipes, filesToAddInCSV);
                         System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
@@ -77,8 +79,34 @@ public class Demo {
                     break;
                 case "5":
                     listAllRecipesByName(defaultRecipes);
-                    choose = getUserChoose("Enter recipe`s name. ");
+                    choose = getUserChoose("Enter recipe`s name.");
                     getRecipeByName(defaultRecipes, choose).forEach(System.out::println);
+                    if (getRecipeByName(defaultRecipes, choose).isEmpty())
+                        break;
+                    int userRating = Integer.parseInt(getUserChoose("Evaluate the recipe."));
+                    List<Recipe> recipesToEvaluate = getRecipeByName(defaultRecipes, choose);
+                    recipesToEvaluate.get(0).setUserRating(userRating);
+                    // todo трябва да запише промените и във файла
+
+//                        CsvOperation.writeInCSV(defaultRecipesPath, recipeToAdd.get(0).split(""));
+//                        List<String> recipeToAdd = recipesToEvaluate.stream()
+//                                .map(object -> Objects.toString(object, null))
+//                                .collect(Collectors.toList());
+//
+
+//                        String[] array = new String[recipesToEvaluate.size()];
+//                        int index = 0;
+//                        for (Object value : recipesToEvaluate) {
+//                            array[index] = String.valueOf(value);
+//                            index++;
+//                        }
+//
+//
+//                        for (int i = 0; i < ; i++) {
+//
+//                        }
+
+
                     break;
 
                 case "6":
@@ -102,7 +130,7 @@ public class Demo {
 
                     break;
                 case "back":
-                    System.out.println(ANSI_GREEN +"You are back to normal, unhidden recipes."+ ANSI_RESET);
+                    System.out.println(ANSI_GREEN + "You are back to normal, unhidden recipes." + ANSI_RESET);
                     defaultRecipesPath = UNHIDDEN_RECIPE_PATH;
                     defaultRecipes = unhiddenRecipes;
                     defaultRecipesData = unhiddenRecipesData;
@@ -133,12 +161,16 @@ public class Demo {
                 RecipeOperation.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
 
             List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
+
+            double rating = recipeByName.get(0).getRating();
+            int voteCount = recipeByName.get(0).getVoteCount();
+
             recipes.removeAll(recipeByName);
             String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
             int idx = fileData.indexOf(currentRecipe) + 1;
-            CsvOperation.deleteFromCSV(path, idx);
 
-            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(recipeName);
+            CsvOperation.deleteFromCSV(path, idx);
+            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(recipeName, voteCount, rating);
             CsvOperation.writeInCSV(path, usersChooseFileToAdd);
             RecipeOperation.addOneRecipeInList(recipes, usersChooseFileToAdd);
             System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
@@ -148,7 +180,7 @@ public class Demo {
     }
 
     @NotNull
-    private static String[] getUsersChooseFileToAdd(String recipeName) {
+    private static String[] getUsersChooseFileToAdd(String recipeName, int voteCount, double rating) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(recipeName).append(DELIMITER);
@@ -169,7 +201,20 @@ public class Demo {
 
         String toAppendThirdStep = Demo.SCANNER.nextLine();
         sb.append(toAppendThirdStep).append(DELIMITER);
+        // при промяна на рецептата затрива рейтинга
+        if (rating == 0 && voteCount == 0) {
+            String toAppendDefaultRating = "0";
+            sb.append(toAppendDefaultRating).append(DELIMITER);
 
+            String toAppendDefaultVoteCount = "0";
+            sb.append(toAppendDefaultVoteCount).append(DELIMITER);
+        } else {
+            String toAppendRating = String.valueOf(rating);
+            sb.append(toAppendRating).append(DELIMITER);
+
+            String toAppendVoteCount = String.valueOf(voteCount);
+            sb.append(toAppendVoteCount).append(DELIMITER);
+        }
         return sb.toString().split(DELIMITER);
 
     }

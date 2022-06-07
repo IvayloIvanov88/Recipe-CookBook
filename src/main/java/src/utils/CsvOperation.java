@@ -36,7 +36,6 @@ public class CsvOperation {
             FileWriter outputFile = new FileWriter(file, true);
 
             try (CSVWriter writer = new CSVWriter(outputFile)) {
-
                 List<String[]> data = new ArrayList<>();
                 data.add(files);
                 writer.writeAll(data);
