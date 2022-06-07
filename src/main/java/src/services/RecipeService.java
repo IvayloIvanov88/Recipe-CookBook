@@ -42,12 +42,38 @@ public class RecipeService {
         return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
     }
 
+    public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
+
+        String recipeName = UserService.getUserChoose("Choose recipe by name to change.");
+
+        if (RecipeService.isRecipeExist(fileData, recipeName) ||
+                RecipeService.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
+
+            List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
+
+            double rating = recipeByName.get(0).getRating();
+            int voteCount = recipeByName.get(0).getVoteCount();
+
+            recipes.removeAll(recipeByName);
+            String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
+            int idx = fileData.indexOf(currentRecipe) + 1;
+            CSVFileService.deleteFromCSV(path, idx);
+
+            String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating);
+            CSVFileService.writeInCSV(path, usersChooseFileToAddInCSV);
+            List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
+            addRecipesInList(recipes, usersChooseFileToAddInList);
+            System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
+        } else {
+            System.err.println("There is no such recipe.");
+        }
+    }
+
     public static void addRecipesInList(List<Recipe> recipes, List<String[]> allData) {
         Recipe recipe;
         String[] nextLine;
         for (String[] row : allData) {
             nextLine = row;
-
             String recipeName = nextLine[0];
 
             if (!isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
@@ -84,69 +110,6 @@ public class RecipeService {
         }
     }
 
-    public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
-
-        String recipeName = UserService.getUserChoose("Choose recipe by name to change.");
-
-        if (RecipeService.isRecipeExist(fileData, recipeName) ||
-                RecipeService.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
-
-            List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
-
-            double rating = recipeByName.get(0).getRating();
-            int voteCount = recipeByName.get(0).getVoteCount();
-
-            recipes.removeAll(recipeByName);
-            String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
-            int idx = fileData.indexOf(currentRecipe) + 1;
-
-            CSVFileService.deleteFromCSV(path, idx);
-            String[] usersChooseFileToAdd = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating);
-            CSVFileService.writeInCSV(path, usersChooseFileToAdd);
-            RecipeService.addOneRecipeInList(recipes, usersChooseFileToAdd);
-            System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
-        } else {
-            System.err.println("There is no such recipe.");
-        }
-    }
-
-    public static void addOneRecipeInList(List<Recipe> recipes, String[] data) {
-        Recipe recipe;
-
-        String recipeName = data[0];
-
-        if (!isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
-
-            recipe = getRecipeType(recipeName);
-
-            recipe.setName(data[0]);
-            try {
-                recipe.setServing(Integer.parseInt(data[1]));
-                recipe.setPrepTime(Integer.parseInt(data[2]));
-            } catch (NumberFormatException e) {
-                System.err.println("Enter digit for yield and for preparation time");
-            }
-            recipe.addAllIngredient(Arrays.stream(data[3].split(",")).collect(Collectors.toList()));
-
-            int countSteps = 1;
-            String[] split = data[4].split("\\.\\s+");
-            for (String s : split) {
-                recipe.setDirections(countSteps++, s);
-            }
-            try {
-                recipe.setRating(Double.parseDouble(data[5]));
-                recipe.setVoteCount(Integer.parseInt(data[6]));
-            } catch (NumberFormatException e) {
-                System.err.println("Enter digit in range 0 - 6");
-            }catch (ArrayIndexOutOfBoundsException e){
-                recipe.setRating(Double.parseDouble("0.00"));
-                recipe.setVoteCount(Integer.parseInt("0"));
-            }
-
-            recipes.add(recipe);
-        }
-    }
-
     private static Recipe getRecipeType(String name) {
 
         Recipe recipe = null;
@@ -165,6 +128,18 @@ public class RecipeService {
         System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Dessert, Pasta or Alaminut");
         firstWordOfName = scanner.nextLine();
         return getRecipeType(firstWordOfName);
+    }
+
+    public static void evaluateRecipe(List<Recipe> recipes, String choose) {
+        if (getRecipeByName(recipes, choose).isEmpty())
+            return;
+        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
+        if (!userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y")) {
+            int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
+            List<Recipe> recipesToEvaluate = getRecipeByName(recipes, choose);
+            recipesToEvaluate.get(0).setUserRating(userRating);
+            // todo трябва да запише промените и във файла
+        }
     }
 
 }
