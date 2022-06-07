@@ -1,9 +1,9 @@
-package src.utils;
+package src.services;
 
-import static src.utils.RecipeOperation.ANSI_RED;
-import static src.utils.RecipeOperation.ANSI_RESET;
+import static src.services.RecipeService.ANSI_RED;
+import static src.services.RecipeService.ANSI_RESET;
 
-public class Menu {
+public class MenuService {
     public static final String PRINT_LINE = "|----------------------------------------------|\n";
 
     public static void showOptions() {

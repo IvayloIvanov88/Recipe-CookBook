@@ -1,4 +1,4 @@
-package src.utils;
+package src.services;
 
 import src.recipe.*;
 

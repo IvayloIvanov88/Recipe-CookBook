@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: src.Demo
+Main-Class: src.application.Demo
 Class-Path: commons-collections-3.2.2.jar commons-text-1.1.jar commons-l
  ogging-1.2.jar annotations-20.1.0.jar mysql-connector-java-8.0.29.jar c
  ommons-lang3-3.6.jar protobuf-java-3.19.4.jar opencsv-4.1.jar commons-b

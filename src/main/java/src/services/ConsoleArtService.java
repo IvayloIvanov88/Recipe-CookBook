@@ -1,9 +1,9 @@
-package src.utils;
+package src.services;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ConsoleArt {
+public class ConsoleArtService {
     public void draw(String artText, int textHeight, String artSymbol) {
         String fontName = "DialogInput";
         int imageWidth = findImageWidth(textHeight, artText, fontName);

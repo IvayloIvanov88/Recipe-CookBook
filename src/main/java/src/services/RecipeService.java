@@ -1,4 +1,4 @@
-package src.utils;
+package src.services;
 
 import src.recipe.*;
 
@@ -6,16 +6,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static src.user.User.getUserChoose;
-import static src.user.User.getUsersChooseFileToAdd;
 
-public class RecipeOperation {
+public class RecipeService {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     static Scanner scanner = new Scanner(System.in);
 
-    private RecipeOperation() {
+    private RecipeService() {
     }
 
     public static List<Recipe> getRecipeByName(List<Recipe> recipes, String filter) {
@@ -88,10 +86,10 @@ public class RecipeOperation {
 
     public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
 
-        String recipeName = getUserChoose("Choose recipe by name to change.");
+        String recipeName = UserService.getUserChoose("Choose recipe by name to change.");
 
-        if (RecipeOperation.isRecipeExist(fileData, recipeName) ||
-                RecipeOperation.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
+        if (RecipeService.isRecipeExist(fileData, recipeName) ||
+                RecipeService.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
 
             List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
 
@@ -102,10 +100,10 @@ public class RecipeOperation {
             String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
             int idx = fileData.indexOf(currentRecipe) + 1;
 
-            CsvOperation.deleteFromCSV(path, idx);
-            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(recipeName, voteCount, rating);
-            CsvOperation.writeInCSV(path, usersChooseFileToAdd);
-            RecipeOperation.addOneRecipeInList(recipes, usersChooseFileToAdd);
+            CSVFileService.deleteFromCSV(path, idx);
+            String[] usersChooseFileToAdd = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating);
+            CSVFileService.writeInCSV(path, usersChooseFileToAdd);
+            RecipeService.addOneRecipeInList(recipes, usersChooseFileToAdd);
             System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
         } else {
             System.err.println("There is no such recipe.");

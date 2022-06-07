@@ -1,4 +1,4 @@
-package src.utils;
+package src.services;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvOperation {
+public class CSVFileService {
 
     public static List<String[]> readFromCSV(String fileName) {
         List<String[]> allData = null;

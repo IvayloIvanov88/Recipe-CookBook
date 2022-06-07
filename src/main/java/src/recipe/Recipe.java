@@ -3,8 +3,8 @@ package src.recipe;
 import java.util.*;
 
 import static java.lang.String.format;
-import static src.utils.RecipeOperation.ANSI_RED;
-import static src.utils.RecipeOperation.ANSI_RESET;
+import static src.services.RecipeService.ANSI_RED;
+import static src.services.RecipeService.ANSI_RESET;
 
 public abstract class Recipe {
     private String name;
