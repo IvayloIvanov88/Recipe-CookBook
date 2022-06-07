@@ -1,18 +1,16 @@
 package src.application;
 
 
+import org.w3c.dom.ls.LSOutput;
 import src.recipe.*;
-import src.services.ConsoleArtService;
-import src.services.CSVFileService;
-import src.services.RecipeService;
-import src.services.UserService;
+import src.services.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static src.services.MenuService.showOptions;
 import static src.services.RecipeService.*;
 import static src.services.RecipeService.getRecipeByName;
+import static src.services.UserService.SCANNER;
 
 public class Demo {
 
@@ -35,10 +33,10 @@ public class Demo {
         List<Recipe> defaultRecipes = unhiddenRecipes;
         List<String[]> defaultRecipesData = unhiddenRecipesData;
 
-        showOptions();
+        MenuService.showOptions();
 
         String choose = "";
-        while (!(choose = UserService.SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
+        while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
 
             switch (choose) {
                 case "1":
@@ -51,7 +49,9 @@ public class Demo {
                     if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
                         String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0);
                         CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
-                        RecipeService.addOneRecipeInList(defaultRecipes, filesToAddInCSV);
+
+                        List<String[]> filesToAddInList = new ArrayList<>(Collections.singleton(filesToAddInCSV));
+                        RecipeService.addRecipesInList(defaultRecipes, filesToAddInList);
                         System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
                     } else {
                         System.err.println("There is already such recipe.");
@@ -65,8 +65,8 @@ public class Demo {
                 case "4":
                     listAllRecipesByName(defaultRecipes);
                     choose = UserService.getUserChoose("Choose number to delete.");
+                    int userChoose = Integer.parseInt(choose);
                     try {
-                        int userChoose = Integer.parseInt(choose);
                         CSVFileService.deleteFromCSV(defaultRecipesPath, userChoose);
                         defaultRecipes.remove(userChoose - 1);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
@@ -77,17 +77,15 @@ public class Demo {
                 case "5":
                     listAllRecipesByName(defaultRecipes);
                     choose = UserService.getUserChoose("Enter recipe`s name.");
-                    getRecipeByName(defaultRecipes, choose).forEach(System.out::println);
-                    if (getRecipeByName(defaultRecipes, choose).isEmpty())
+                    List<Recipe> recipeByName = getRecipeByName(defaultRecipes, choose);
+
+                    if (recipeByName.isEmpty()) {
+                        System.out.println("Wrong recipe name or missing such recipe ");
                         break;
-                    int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
-                    List<Recipe> recipesToEvaluate = getRecipeByName(defaultRecipes, choose);
-                    recipesToEvaluate.get(0).setUserRating(userRating);
-                    // todo трябва да запише промените и във файла
-
-
+                    }
+                    recipeByName.forEach(System.out::println);
+                    RecipeService.evaluateRecipe(defaultRecipes, choose);
                     break;
-
                 case "6":
                     choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, desert, salad, alaminut, pasta, soup.");
                     getRecipeByFilter(defaultRecipes, choose).forEach(System.out::println);
@@ -106,7 +104,6 @@ public class Demo {
                     defaultRecipesPath = HIDDEN_RECIPE_PATH;
                     defaultRecipes = hiddenRecipes;
                     defaultRecipesData = hiddenRecipesData;
-
                     break;
                 case "back":
                     System.out.println(ANSI_GREEN + "You are back to normal, unhidden recipes." + ANSI_RESET);
@@ -118,11 +115,12 @@ public class Demo {
                     System.out.println(ANSI_GREEN + "Try again, read carefully options." + ANSI_RESET);
 
             }
-            showOptions();
+            MenuService.pressEnterToContinue();
+            MenuService.showOptions();
         }
         ConsoleArtService artGen = new ConsoleArtService();
         artGen.draw("Goodbye", 13, ANSI_GREEN + "$" + ANSI_RESET);
         artGen.draw("Bon Appetit", 13, ANSI_RED + "#" + ANSI_RESET);
-
     }
+
 }
