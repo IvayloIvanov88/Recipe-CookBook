@@ -9,11 +9,11 @@ public class User {
     private String password;
 
     public User(String username, String firstName, String lastName, int age, String password) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-        this.password = password;
+        this.setUsername(username);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
+        this.setAge(age);
+        this.setPassword(password);
     }
 
     public String getUsername() {
@@ -45,16 +45,15 @@ public class User {
     }
 
     public void setAge(int age) {
+        if (age < 0 || age > 120) {
+            System.err.println("Invalid age.");
+        }
         this.age = age;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public void setPassword(String password) {
         this.password = password;
     }
-
 
 }
