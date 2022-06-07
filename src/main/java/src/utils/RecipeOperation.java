@@ -6,8 +6,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static src.utils.User.getUserChoose;
-import static src.utils.User.getUsersChooseFileToAdd;
+import static user.User.getUserChoose;
+import static user.User.getUsersChooseFileToAdd;
 
 public class RecipeOperation {
     public static final String ANSI_RESET = "\u001B[0m";
