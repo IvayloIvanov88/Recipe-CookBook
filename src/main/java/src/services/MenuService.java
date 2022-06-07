@@ -27,4 +27,11 @@ public class MenuService {
 
 
     }
+
+    public static void pressEnterToContinue() {
+        System.out.println("Press enter to continue");
+        try{System.in.read();}
+        catch(Exception ignored){
+        }
+    }
 }
