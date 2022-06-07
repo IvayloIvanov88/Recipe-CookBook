@@ -6,6 +6,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static src.Demo.getUserChoose;
+import static src.Demo.getUsersChooseFileToAdd;
+
 public class RecipeOperation {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -80,6 +83,32 @@ public class RecipeOperation {
 
                 recipes.add(recipe);
             }
+        }
+    }
+
+    public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
+
+        String recipeName = getUserChoose("Choose recipe by name to change.");
+
+        if (RecipeOperation.isRecipeExist(fileData, recipeName) ||
+                RecipeOperation.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
+
+            List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
+
+            double rating = recipeByName.get(0).getRating();
+            int voteCount = recipeByName.get(0).getVoteCount();
+
+            recipes.removeAll(recipeByName);
+            String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
+            int idx = fileData.indexOf(currentRecipe) + 1;
+
+            CsvOperation.deleteFromCSV(path, idx);
+            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(recipeName, voteCount, rating);
+            CsvOperation.writeInCSV(path, usersChooseFileToAdd);
+            RecipeOperation.addOneRecipeInList(recipes, usersChooseFileToAdd);
+            System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
+        } else {
+            System.err.println("There is no such recipe.");
         }
     }
 

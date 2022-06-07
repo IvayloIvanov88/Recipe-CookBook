@@ -9,14 +9,13 @@ import src.utils.RecipeOperation;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
+import static src.utils.Menu.showOptions;
 import static src.utils.RecipeOperation.*;
 import static src.utils.RecipeOperation.getRecipeByName;
 
 public class Demo {
 
-    public static final String PRINT_LINE = "|----------------------------------------------|\n";
 
     private static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
     private static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
@@ -38,6 +37,7 @@ public class Demo {
         String defaultRecipesPath = UNHIDDEN_RECIPE_PATH;
         List<Recipe> defaultRecipes = unhiddenRecipes;
         List<String[]> defaultRecipesData = unhiddenRecipesData;
+
         showOptions();
 
         String choose = "";
@@ -88,24 +88,6 @@ public class Demo {
                     recipesToEvaluate.get(0).setUserRating(userRating);
                     // todo трябва да запише промените и във файла
 
-//                        CsvOperation.writeInCSV(defaultRecipesPath, recipeToAdd.get(0).split(""));
-//                        List<String> recipeToAdd = recipesToEvaluate.stream()
-//                                .map(object -> Objects.toString(object, null))
-//                                .collect(Collectors.toList());
-//
-
-//                        String[] array = new String[recipesToEvaluate.size()];
-//                        int index = 0;
-//                        for (Object value : recipesToEvaluate) {
-//                            array[index] = String.valueOf(value);
-//                            index++;
-//                        }
-//
-//
-//                        for (int i = 0; i < ; i++) {
-//
-//                        }
-
 
                     break;
 
@@ -148,39 +130,13 @@ public class Demo {
     }
 
 
-    private static String getUserChoose(String message) {
+    public static String getUserChoose(String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
         return Demo.SCANNER.nextLine();
     }
 
-    private static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
-
-        String recipeName = getUserChoose("Choose recipe by name to change.");
-
-        if (RecipeOperation.isRecipeExist(fileData, recipeName) ||
-                RecipeOperation.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
-
-            List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
-
-            double rating = recipeByName.get(0).getRating();
-            int voteCount = recipeByName.get(0).getVoteCount();
-
-            recipes.removeAll(recipeByName);
-            String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
-            int idx = fileData.indexOf(currentRecipe) + 1;
-
-            CsvOperation.deleteFromCSV(path, idx);
-            String[] usersChooseFileToAdd = getUsersChooseFileToAdd(recipeName, voteCount, rating);
-            CsvOperation.writeInCSV(path, usersChooseFileToAdd);
-            RecipeOperation.addOneRecipeInList(recipes, usersChooseFileToAdd);
-            System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
-        } else {
-            System.err.println("There is no such recipe.");
-        }
-    }
-
     @NotNull
-    private static String[] getUsersChooseFileToAdd(String recipeName, int voteCount, double rating) {
+    public static String[] getUsersChooseFileToAdd(String recipeName, int voteCount, double rating) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(recipeName).append(DELIMITER);
@@ -201,7 +157,7 @@ public class Demo {
 
         String toAppendThirdStep = Demo.SCANNER.nextLine();
         sb.append(toAppendThirdStep).append(DELIMITER);
-        // при промяна на рецептата затрива рейтинга
+
         if (rating == 0 && voteCount == 0) {
             String toAppendDefaultRating = "0";
             sb.append(toAppendDefaultRating).append(DELIMITER);
@@ -216,28 +172,6 @@ public class Demo {
             sb.append(toAppendVoteCount).append(DELIMITER);
         }
         return sb.toString().split(DELIMITER);
-
-    }
-
-    public static void showOptions() {
-        System.out.println(PRINT_LINE +
-                "|\t\t" + ANSI_RED + "Welcome to Experian`s recipe book !" + ANSI_RESET + "    |\n" +
-                PRINT_LINE +
-                "|\t1. Read all recipes                        |\n" +
-                PRINT_LINE +
-                "|\t2. Add a recipe                            |\n" +
-                PRINT_LINE +
-                "|\t3. Edit recipe                             |\n" +
-                PRINT_LINE +
-                "|\t4. Delete recipe                           |\n" +
-                PRINT_LINE +
-                "|\t5. Find specific recipe by name            |\n" +
-                PRINT_LINE +
-                "|\t6. Find specific recipe by type            |\n" +
-                PRINT_LINE + PRINT_LINE +
-                "|\tTo exit type: exit                         |\n" +
-                PRINT_LINE);
-
 
     }
 

@@ -50,13 +50,14 @@ public abstract class Recipe {
     public String toString() {
 
         return format(
-                ANSI_RED + "Rating: " + ANSI_RESET + "%.2f\n" +
+                ANSI_RED + "Rating: " + ANSI_RESET + "%.2f of 6.00 by %d votes\n" +
                         ANSI_RED + "Recipe name is: " + ANSI_RESET + "%s\n" +
                         ANSI_RED + "ingredients are:\n" + ANSI_RESET + "%s.\n" +
                         ANSI_RED + "for: " + ANSI_RESET + "%d portions.\n" +
                         ANSI_RED + "Time for preparation: " + ANSI_RESET + "%d min.\n" +
                         ANSI_RED + "Preparation:" + ANSI_RESET + "\n%s",
                 calcAvgRating(),
+                this.voteCount,
                 this.name,
                 String.join(",", this.ingredient),
                 this.serving,
@@ -159,7 +160,6 @@ public abstract class Recipe {
         if (userRating < 0 || userRating > 6) {
             System.err.println("Rating must be a positive number between 0 and 6.");
         } else {
-//            this.userRating = userRating;
             this.voteCount++;
             this.setRating(userRating);
         }
