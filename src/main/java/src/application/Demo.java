@@ -1,12 +1,10 @@
 package src.application;
 
 
-import org.w3c.dom.ls.LSOutput;
 import src.recipe.*;
 import src.services.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static src.services.RecipeService.*;
 import static src.services.RecipeService.getRecipeByName;
@@ -40,7 +38,7 @@ public class Demo {
 
             switch (choose) {
                 case "1":
-                    listAllRecipesByName(defaultRecipes);
+                    printAllRecipesByName(defaultRecipes);
 //                    AtomicInteger count = new AtomicInteger(0);
 //                    defaultRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
                     break;
@@ -60,33 +58,34 @@ public class Demo {
                     break;
 
                 case "3":
-                    listAllRecipesByName(defaultRecipes);
+                    printAllRecipesByName(defaultRecipes);
                     editRecipe(defaultRecipesPath, defaultRecipesData, defaultRecipes);
                     break;
                 case "4":
-                    listAllRecipesByName(defaultRecipes);
+                    printAllRecipesByName(defaultRecipes);
                     choose = UserService.getUserChoose("Choose number to delete.");
-                    int userChoose = Integer.parseInt(choose);
                     try {
+                        int userChoose = Integer.parseInt(choose);
                         CSVFileService.deleteFromCSV(defaultRecipesPath, userChoose);
                         defaultRecipes.remove(userChoose - 1);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
                         System.err.println("Try with valid number!");
                     }
-
                     break;
                 case "5":
                     choose = UserService.getUserChoose("Enter recipe`s name.");
-                    List<Recipe> recipeByName = getRecipeByName(defaultRecipes, choose);
-
-                    if (recipeByName.isEmpty()) {
-                        List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
-                        listAllRecipesByName(recipeByPartOfName);
-                        // todo да покаже рецепта по избор от намерените
+                    List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
+                    if (recipeByPartOfName.isEmpty()) {
+                        System.err.println("There is no such recipe");
                         break;
                     }
-                    recipeByName.forEach(System.out::println);
-                    RecipeService.evaluateRecipe(defaultRecipes, choose);
+                    if (recipeByPartOfName.size() == 1) {
+                        recipeByPartOfName.forEach(System.out::println);
+                        break;
+                    }
+                    printAllRecipesByName(recipeByPartOfName);
+                    String userChooseToView = UserService.getUserChoose("Enter number of recipe that you want to view");
+                    RecipeService.printRecipeByIndex(recipeByPartOfName, userChooseToView);
                     break;
                 case "6":
                     choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
