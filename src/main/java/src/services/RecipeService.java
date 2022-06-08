@@ -47,9 +47,21 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
-    public static void listAllRecipesByName(List<Recipe> unhiddenRecipes) {
+    public static void printAllRecipesByName(List<Recipe> unhiddenRecipes) {
         AtomicInteger countRecipe = new AtomicInteger(0);
         unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
+    }
+
+
+    public static void printRecipeByIndex(List<Recipe> recipeByPartOfName, String userChooseToView) {
+        try{
+            System.out.println(recipeByPartOfName.get(Integer.parseInt(userChooseToView) - 1));
+        } catch(NumberFormatException e ){
+            System.err.println("Enter only digits.");
+        } catch(IndexOutOfBoundsException e){
+            System.err.println("No such recipe.");
+        }
+
     }
 
     public static boolean isRecipeExist(List<String[]> fileData, String title) {
@@ -148,20 +160,24 @@ public class RecipeService {
         return getRecipeType(nameWordByWord);
     }
 
-    public static void evaluateRecipe(List<Recipe> recipes, String choose) {
-        List<Recipe> recipesToEvaluate = getRecipeByName(recipes, choose);
-        if (recipesToEvaluate.isEmpty()) {
-            System.err.println("There is no such recipe");
-            return;
-        }
-        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
-        if (!userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y")) {
-            int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
-            recipesToEvaluate.get(0).setUserRating(userRating);
-            // todo трябва да запише промените и във файла
-            double rating = recipesToEvaluate.get(0).getRating();
+//    public static void evaluateRecipe(List<Recipe> recipes, String choose) {
+////        List<Recipe> recipesToEvaluate = getRecipeByName(recipes, choose);
+////        if (recipesToEvaluate.isEmpty()) {
+////            System.err.println("There is no such recipe");
+////            return;
+////        }
+////        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
+////        if (!userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y")) {
+//            int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
+//            recipesToEvaluate.get(0).setUserRating(userRating);
+//            double rating = recipesToEvaluate.get(0).getRating();
+//
+//        }
+//    }
 
-        }
+    public static boolean isRecipeSubjectOfEvaluation(){
+        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
+        return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
     }
 
 }

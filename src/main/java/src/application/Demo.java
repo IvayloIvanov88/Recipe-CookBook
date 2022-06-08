@@ -74,6 +74,7 @@ public class Demo {
                     break;
                 case "5":
                     choose = UserService.getUserChoose("Enter recipe`s name.");
+
                     List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
                     if (recipeByPartOfName.isEmpty()) {
                         System.err.println("There is no such recipe");
@@ -89,7 +90,20 @@ public class Demo {
                     break;
                 case "6":
                     choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
-                    getRecipeByFilter(defaultRecipes, choose).forEach(System.out::println);
+
+                    List<Recipe> recipeByFilter = getRecipeByFilter(defaultRecipes, choose);
+                    if (recipeByFilter.isEmpty()) {
+                        System.err.println("There is no such recipe");
+                        break;
+                    }
+                    if (recipeByFilter.size() == 1) {
+                        recipeByFilter.forEach(System.out::println);
+                        break;
+                    }
+                    printAllRecipesByName(recipeByFilter);
+                    String userChooseToView1 = UserService.getUserChoose("Enter number of recipe that you want to view");
+                    RecipeService.printRecipeByIndex(recipeByFilter, userChooseToView1);
+
                     break;
 
                 case "123":
