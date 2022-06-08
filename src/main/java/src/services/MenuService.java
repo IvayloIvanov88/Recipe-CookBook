@@ -1,9 +1,14 @@
 package src.services;
 
+import java.io.IOException;
+
 import static src.services.RecipeService.ANSI_RED;
 import static src.services.RecipeService.ANSI_RESET;
 
 public class MenuService {
+    private MenuService() {
+    }
+
     public static final String PRINT_LINE = "|----------------------------------------------|\n";
 
     public static void showOptions() {
@@ -31,7 +36,8 @@ public class MenuService {
     public static void pressEnterToContinue() {
         System.out.println("Press enter to continue");
         try{System.in.read();}
-        catch(Exception ignored){
+        catch(IOException ignored) {
         }
+
     }
 }

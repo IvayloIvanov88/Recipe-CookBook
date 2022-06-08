@@ -8,6 +8,9 @@ import static src.services.RecipeService.ANSI_RED;
 import static src.services.RecipeService.ANSI_RESET;
 
 public class UserService {
+    private UserService() {
+    }
+
     private static final String DELIMITER = "delimiter";
     public static final Scanner SCANNER = new Scanner(System.in);
 

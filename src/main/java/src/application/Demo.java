@@ -40,8 +40,9 @@ public class Demo {
 
             switch (choose) {
                 case "1":
-                    AtomicInteger count = new AtomicInteger(0);
-                    defaultRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
+                    listAllRecipesByName(defaultRecipes);
+//                    AtomicInteger count = new AtomicInteger(0);
+//                    defaultRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
                     break;
 
                 case "2":
@@ -75,19 +76,20 @@ public class Demo {
 
                     break;
                 case "5":
-                    listAllRecipesByName(defaultRecipes);
                     choose = UserService.getUserChoose("Enter recipe`s name.");
                     List<Recipe> recipeByName = getRecipeByName(defaultRecipes, choose);
 
                     if (recipeByName.isEmpty()) {
-                        System.out.println("Wrong recipe name or missing such recipe ");
+                        List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
+                        listAllRecipesByName(recipeByPartOfName);
+                        // todo да покаже рецепта по избор от намерените
                         break;
                     }
                     recipeByName.forEach(System.out::println);
                     RecipeService.evaluateRecipe(defaultRecipes, choose);
                     break;
                 case "6":
-                    choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, desert, salad, alaminut, pasta, soup.");
+                    choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
                     getRecipeByFilter(defaultRecipes, choose).forEach(System.out::println);
                     break;
 

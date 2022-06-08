@@ -22,6 +22,24 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
+    public static List<Recipe> getRecipeByPartOfName(List<Recipe> recipes, String filter) {
+        List<Recipe> filteredRecipes = new ArrayList<>();
+        String[] fullName = filter.split("\\s+");
+
+        for (int i = 0; i < fullName.length; i++) {
+
+            for (int j = 0; j < recipes.size(); j++) {
+                String [] name = recipes.get(j).getName().split("\\s+");
+                for (int k = 0; k < name.length; k++) {
+                    if (fullName[i].equalsIgnoreCase(name[k])) {
+                        filteredRecipes.add(recipes.get(j));
+                    }
+                }
+            }
+        }
+        return filteredRecipes;
+    }
+
     public static List<Recipe> getRecipeByFilter(List<Recipe> recipes, String filter) {
 
         return recipes.stream()
@@ -100,7 +118,7 @@ public class RecipeService {
                     recipe.setVoteCount(Integer.parseInt(nextLine[6]));
                 } catch (NumberFormatException e) {
                     System.err.println("Enter digit in range 0 - 6");
-                }catch (ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     recipe.setRating(Double.parseDouble("0.00"));
                     recipe.setVoteCount(Integer.parseInt("0"));
                 }
@@ -114,31 +132,35 @@ public class RecipeService {
 
         Recipe recipe = null;
         String[] fullName = name.split("\\s+");
-        String firstWordOfName;
+        String nameWordByWord;
         RecipeSupplier recipeSupplier = new RecipeSupplier();
 
-        for (int i = 0; i < fullName.length; i++) {
-            firstWordOfName = fullName[i];
+        for (String s : fullName) {
+            nameWordByWord = s;
 
-            recipe = recipeSupplier.supplyRecipe(firstWordOfName);
+            recipe = recipeSupplier.supplyRecipe(nameWordByWord);
             if (recipe != null) {
                 return recipe;
             }
         }
         System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Dessert, Pasta or Alaminut");
-        firstWordOfName = scanner.nextLine();
-        return getRecipeType(firstWordOfName);
+        nameWordByWord = scanner.nextLine();
+        return getRecipeType(nameWordByWord);
     }
 
     public static void evaluateRecipe(List<Recipe> recipes, String choose) {
-        if (getRecipeByName(recipes, choose).isEmpty())
+        List<Recipe> recipesToEvaluate = getRecipeByName(recipes, choose);
+        if (recipesToEvaluate.isEmpty()) {
+            System.err.println("There is no such recipe");
             return;
+        }
         String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
         if (!userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y")) {
             int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
-            List<Recipe> recipesToEvaluate = getRecipeByName(recipes, choose);
             recipesToEvaluate.get(0).setUserRating(userRating);
             // todo трябва да запише промените и във файла
+            double rating = recipesToEvaluate.get(0).getRating();
+
         }
     }
 
