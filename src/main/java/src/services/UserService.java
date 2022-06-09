@@ -1,7 +1,10 @@
 package src.services;
 
 import org.jetbrains.annotations.NotNull;
+import src.user.User;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static src.services.RecipeService.ANSI_RED;
@@ -9,6 +12,23 @@ import static src.services.RecipeService.ANSI_RESET;
 
 public class UserService {
     private UserService() {
+    }
+
+    public static void addUserInList(Map<String, User> users, List<String[]> allData){
+        User user = new User();
+        if (allData.size() > 0){
+            for (String[] row : allData) {
+                String username = row[0];
+                user.setUsername(username);
+                user.setPassword(row[1]);
+                user.setSalt(row[2]);
+
+                users.put(username, user);
+            }
+        }else {
+            System.out.println("User database is empty");
+        }
+
     }
 
     static final String DELIMITER = "delimiter";

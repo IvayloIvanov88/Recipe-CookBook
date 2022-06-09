@@ -32,6 +32,28 @@ public class MenuService {
 
 
     }
+    public static void showLoginOptions(){
+        System.out.println(PRINT_LINE +
+                "|\t\t" + ANSI_RED + "Welcome to Experian`s recipe book !" + ANSI_RESET + "    |\n" +
+                "|\t " + ANSI_RED + "Log in or create an account to continue" + ANSI_RESET + "   |\n" +
+                PRINT_LINE +
+                "|\t1. Log in                                  |\n" +
+                PRINT_LINE +
+                "|\t2. Sign up                                 |\n" +
+                PRINT_LINE + PRINT_LINE +
+                "|\tTo exit type: exit                         |\n" +
+                PRINT_LINE);
+    }
+    public static void loginMessage(){
+        System.out.println(PRINT_LINE +
+                "|\t\t\t Log in to your account            |\n" +
+                PRINT_LINE);
+    }
+    public static void signUpMessage(){
+        System.out.println(PRINT_LINE +
+                "|\t\t\t Sign up to access the app         |\n" +
+                PRINT_LINE);
+    }
 
     public static void pressEnterToContinue() {
         System.out.println("Press enter to continue");
