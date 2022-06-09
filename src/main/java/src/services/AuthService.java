@@ -16,6 +16,7 @@ public class AuthService {
 
     private boolean isUserAuthenticated(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         User user = Demo.usersData.get(username);
+
         if (user != null){
             String salt = user.getSalt();
             String calculatedHash = getEncryptedPassword(password, salt);
@@ -34,13 +35,14 @@ public class AuthService {
         }
     }
 
-    public boolean signUp(String userName, String password, String path) throws Exception {
+    public boolean signUp(String userName, String password, int age,  String path) throws Exception {
         String salt = getNewSalt();
         String encryptedPassword = getEncryptedPassword(password, salt);
         User user = new User();
         user.setPassword(encryptedPassword);
         user.setUsername(userName);
         user.setSalt(salt);
+        user.setAge(age);
         if (usernameExists(userName, path)){
             System.out.println("Username already exists. Try with another one");
             return false;
@@ -76,10 +78,11 @@ public class AuthService {
         return Base64.getEncoder().encodeToString(salt);
     }
     private void saveUser(User user, String path){
-        String[] userData = new String[3];
+        String[] userData = new String[4];
         userData[0] = user.getUsername();
         userData[1] = user.getPassword();
         userData[2] = user.getSalt();
+        userData[3] = Integer.toString(user.getAge());
         CSVFileService.writeInCSV(path, userData);
         Demo.usersData.put(user.getUsername(), user);
     }

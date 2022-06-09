@@ -30,32 +30,31 @@ public class Demo {
         List<String[]> usersFileData = CSVFileService.readFromCSV(USERS_DATA_PATH);
         UserService.addUserInList(usersData, usersFileData);
 
-        boolean isAuthenticated = false;
+        User currentUser = null;
 
         MenuService.showLoginOptions();
         String choose = "";
         while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
             switch (choose) {
                 case "1":
-                    isAuthenticated = loginUser();
+                    currentUser = loginUser();
                     break;
                 case "2":
                     if(registerUser()){
-                        isAuthenticated = loginUser();
+                        currentUser = loginUser();
                     }
                     break;
                 default:
                     System.out.println(ANSI_GREEN + "Try again, read carefully options." + ANSI_RESET);
             }
-            if (isAuthenticated){
+            if (currentUser != null){
                 break;
             }
             MenuService.showLoginOptions();
 
         }
-
         //if authenticated
-        if(isAuthenticated) {
+        if(currentUser != null) {
             List<Recipe> unhiddenRecipes = new ArrayList<>();
             List<Recipe> hiddenRecipes = new ArrayList<>();
 
@@ -69,7 +68,7 @@ public class Demo {
             List<Recipe> defaultRecipes = unhiddenRecipes;
             List<String[]> defaultRecipesData = unhiddenRecipesData;
 
-            MenuService.showOptions();
+            MenuService.showOptions(Integer.toString(currentUser.getAge()));
 
             choose = "";
             while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
@@ -152,10 +151,8 @@ public class Demo {
 
                         break;
 
-                    case "123":
-                        choose = UserService.getUserChoose("How old are you, and don't lie ?");
-
-                        if (UserService.validateUserAge(choose)) {
+                    case "7":
+                        if (UserService.validateUserAge(Integer.toString(currentUser.getAge()))) {
                             System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" +
                                     "to go back, just type 'back' " + ANSI_RESET);
                         } else {
@@ -177,7 +174,7 @@ public class Demo {
 
                 }
                 MenuService.pressEnterToContinue();
-                MenuService.showOptions();
+                MenuService.showOptions(Integer.toString(currentUser.getAge()));
             }
             ConsoleArtService artGen = new ConsoleArtService();
             artGen.draw("Goodbye", 13, ANSI_GREEN + "$" + ANSI_RESET);
@@ -193,17 +190,21 @@ public class Demo {
         MenuService.signUpMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         String password = UserService.getUserChoose("Enter a password: ");
+        int age = Integer.parseInt(UserService.getUserChoose("Enter your age: "));
 
-        return (authService.signUp(username, password, USERS_DATA_PATH));
+        return (authService.signUp(username, password, age, USERS_DATA_PATH));
     }
 
-    public static boolean loginUser() throws Exception {
+    public static User loginUser() throws Exception {
         AuthService authService = new AuthService();
         MenuService.loginMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         String password = UserService.getUserChoose("Enter a password: ");
 
-        return (authService.logIn(username, password));
+        if (authService.logIn(username, password)){
+            return usersData.get(username);
+        }
+        return null;
     }
 
 }

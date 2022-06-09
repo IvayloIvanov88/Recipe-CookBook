@@ -14,15 +14,16 @@ public class UserService {
     private UserService() {
     }
 
+
     public static void addUserInList(Map<String, User> users, List<String[]> allData){
-        User user = new User();
         if (allData.size() > 0){
             for (String[] row : allData) {
+                User user = new User();
                 String username = row[0];
                 user.setUsername(username);
                 user.setPassword(row[1]);
                 user.setSalt(row[2]);
-
+                user.setAge(Integer.parseInt(row[3]));
                 users.put(username, user);
             }
         }else {
