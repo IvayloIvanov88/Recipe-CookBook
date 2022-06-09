@@ -73,7 +73,7 @@ public class AuthService {
         try {
             f = SecretKeyFactory.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            System.err.println();;
+            System.err.println("Hashing algorithm not found");
         }
 
         byte[] encBytes = new byte[0];
@@ -81,7 +81,7 @@ public class AuthService {
             assert f != null;
             encBytes = f.generateSecret(spec).getEncoded();
         } catch (InvalidKeySpecException e) {
-            System.err.println();
+            System.err.println("Invalid key generated.");
         }
         return Base64.getEncoder().encodeToString(encBytes);
 
@@ -92,7 +92,7 @@ public class AuthService {
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
-            System.err.println();;
+            System.err.println("Hashing algorithm not found");
         }
         byte[] salt = new byte[8];
         assert random != null;
@@ -120,7 +120,7 @@ public class AuthService {
         try {
             isSignUp = authService.signUp(username, password, age, USERS_DATA_PATH);
         } catch (Exception e) {
-            System.err.println();
+            System.err.println("Sign up unsuccessful.");
         }
         return isSignUp;
     }
@@ -136,7 +136,7 @@ public class AuthService {
                 return Demo.usersData.get(username);
             }
         } catch (Exception e) {
-            System.err.println();
+            System.err.println("Login unsuccessful.");
         }
         return null;
     }
