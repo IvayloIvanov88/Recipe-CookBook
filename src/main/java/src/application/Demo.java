@@ -5,24 +5,21 @@ import src.recipe.*;
 import src.services.*;
 import src.user.User;
 
-import java.awt.*;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 import java.util.List;
 
 import static src.services.CSVFileService.updateCSV;
 import static src.services.RecipeService.*;
 import static src.services.UserService.SCANNER;
-import static src.services.UserService.getUserChoose;
+
 
 public class Demo {
 
 
     private static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
     private static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
-    private static final String USERS_DATA_PATH = "src/main/java/src/users.csv";
-    public static Map<String, User> usersData = new HashMap<String, User>();
+    public static final String USERS_DATA_PATH = "src/main/java/src/users.csv";
+    public static Map<String, User> usersData = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
 
@@ -37,11 +34,11 @@ public class Demo {
         while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
             switch (choose) {
                 case "1":
-                    currentUser = loginUser();
+                    currentUser = AuthService.loginUser();
                     break;
                 case "2":
-                    if(registerUser()){
-                        currentUser = loginUser();
+                    if(AuthService.registerUser()){
+                        currentUser = AuthService.loginUser();
                     }
                     break;
                 default:
@@ -70,7 +67,7 @@ public class Demo {
 
             MenuService.showOptions(Integer.toString(currentUser.getAge()));
 
-            choose = "";
+
             while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
 
                 switch (choose) {
@@ -183,28 +180,6 @@ public class Demo {
             System.out.println("Authorization required");
         }
 
-    }
-
-    public static boolean registerUser() throws Exception {
-        AuthService authService = new AuthService();
-        MenuService.signUpMessage();
-        String username = UserService.getUserChoose("Enter a username: ");
-        String password = UserService.getUserChoose("Enter a password: ");
-        int age = Integer.parseInt(UserService.getUserChoose("Enter your age: "));
-
-        return (authService.signUp(username, password, age, USERS_DATA_PATH));
-    }
-
-    public static User loginUser() throws Exception {
-        AuthService authService = new AuthService();
-        MenuService.loginMessage();
-        String username = UserService.getUserChoose("Enter a username: ");
-        String password = UserService.getUserChoose("Enter a password: ");
-
-        if (authService.logIn(username, password)){
-            return usersData.get(username);
-        }
-        return null;
     }
 
 }

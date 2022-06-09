@@ -34,7 +34,7 @@ public class MenuService {
 
     }
     public static String appendHiddenRecipes(String userAge){
-        boolean giveAccess = (Integer.parseInt(userAge) > 18);
+        boolean giveAccess = (Integer.parseInt(userAge) >= 18);
         if (giveAccess){
             return  PRINT_LINE +
                     "|\t7. View hidden recipes                     |\n";
