@@ -6,8 +6,8 @@ import src.services.*;
 
 import java.util.*;
 
+import static src.services.CSVFileService.updateCSV;
 import static src.services.RecipeService.*;
-import static src.services.RecipeService.getRecipeByName;
 import static src.services.UserService.SCANNER;
 
 public class Demo {
@@ -82,6 +82,14 @@ public class Demo {
                     }
                     if (recipeByPartOfName.size() == 1) {
                         recipeByPartOfName.forEach(System.out::println);
+                        if (isRecipeSubjectOfEvaluation()) {
+
+                            int oldVoteCount = recipeByPartOfName.get(0).getVoteCount();
+                            double oldRecipeRate = recipeByPartOfName.get(0).getRating();
+                            double newRecipeRate = evaluateRecipe(recipeByPartOfName);
+                            updateCSV(defaultRecipesPath, String.valueOf(recipeByPartOfName.get(0).getVoteCount()), String.valueOf(oldVoteCount),recipeByPartOfName.get(0).getName());
+                            updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate),recipeByPartOfName.get(0).getName());
+                        }
                         break;
                     }
                     printAllRecipesByName(recipeByPartOfName);

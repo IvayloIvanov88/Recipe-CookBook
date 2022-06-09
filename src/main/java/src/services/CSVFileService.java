@@ -70,18 +70,23 @@ public class CSVFileService {
     }
 
 
-    public static void updateCSV(String fileToUpdate, String updateData, String oldData) {
+    public static void updateCSV(String fileToUpdate, String updateData, String oldData, String recipeName) {
         File inputFile = new File(fileToUpdate);
+
+        String oldDataWithoutZero = oldData.replaceAll(".0+", "");
 
         List<String[]> csvBody = null;
         try (CSVReader reader = new CSVReader(new FileReader(inputFile))) {
             csvBody = reader.readAll();
-            // get CSV row column and replace with by using row and column
-            for (int i = 0; i < csvBody.size(); i++) {
-                String[] strArray = csvBody.get(i);
-                for (int j = 0; j < strArray.length; j++) {
-                    if (strArray[j].equalsIgnoreCase(oldData)) { //String to be replaced
-                        csvBody.get(i)[j] = updateData; //Target replacement
+
+            for (String[] strArray : csvBody) {
+                String currentRecipeName = strArray[0];
+                for (int j = strArray.length - 1; j >= 0; j--) {
+                    if (currentRecipeName.equalsIgnoreCase(recipeName)) {
+                        if (strArray[j].equalsIgnoreCase(oldDataWithoutZero)) { //String to be replaced
+                            strArray[j] = updateData;//Target replacement
+                            break;
+                        }
                     }
                 }
             }
@@ -89,14 +94,11 @@ public class CSVFileService {
             System.err.println(FILE_NOT_FOUND);
 
         }
-
-        // Write to CSV file which is open
         try (CSVWriter writer = new CSVWriter(new FileWriter(inputFile))) {
             writer.writeAll(csvBody);
             writer.flush();
         } catch (IOException e) {
             System.err.println(FILE_NOT_FOUND);
-
         }
     }
 }

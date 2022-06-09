@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static src.services.UserService.DELIMITER;
+
 
 public class RecipeService {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -29,7 +31,7 @@ public class RecipeService {
         for (int i = 0; i < fullName.length; i++) {
 
             for (int j = 0; j < recipes.size(); j++) {
-                String [] name = recipes.get(j).getName().split("\\s+");
+                String[] name = recipes.get(j).getName().split("\\s+");
                 for (int k = 0; k < name.length; k++) {
                     if (fullName[i].equalsIgnoreCase(name[k])) {
                         filteredRecipes.add(recipes.get(j));
@@ -54,11 +56,11 @@ public class RecipeService {
 
 
     public static void printRecipeByIndex(List<Recipe> recipeByPartOfName, String userChooseToView) {
-        try{
+        try {
             System.out.println(recipeByPartOfName.get(Integer.parseInt(userChooseToView) - 1));
-        } catch(NumberFormatException e ){
+        } catch (NumberFormatException e) {
             System.err.println("Enter only digits.");
-        } catch(IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             System.err.println("No such recipe.");
         }
 
@@ -160,24 +162,19 @@ public class RecipeService {
         return getRecipeType(nameWordByWord);
     }
 
-//    public static void evaluateRecipe(List<Recipe> recipes, String choose) {
-////        List<Recipe> recipesToEvaluate = getRecipeByName(recipes, choose);
-////        if (recipesToEvaluate.isEmpty()) {
-////            System.err.println("There is no such recipe");
-////            return;
-////        }
-////        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
-////        if (!userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y")) {
-//            int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
-//            recipesToEvaluate.get(0).setUserRating(userRating);
-//            double rating = recipesToEvaluate.get(0).getRating();
-//
-//        }
-//    }
-
-    public static boolean isRecipeSubjectOfEvaluation(){
+    public static boolean isRecipeSubjectOfEvaluation() {
         String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
         return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
     }
 
+    public static double evaluateRecipe(List<Recipe> recipes) {
+        try {
+            int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
+            recipes.get(0).setUserRating(userRating);
+        } catch (NumberFormatException e){
+            System.err.println("Enter integer number");
+        }
+
+        return recipes.get(0).getRating();
+    }
 }

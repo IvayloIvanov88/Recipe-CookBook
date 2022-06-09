@@ -99,6 +99,14 @@ public abstract class Recipe {
         }
     }
 
+    public int getPrepTime() {
+        return prepTime;
+    }
+
+    public double getUserRating() {
+        return userRating;
+    }
+
     public void addAllIngredient(List<String> ingredient) {
         if (ingredient == null || ingredient.isEmpty()) {
             System.err.println("The Recipe should have an ingredient.");
