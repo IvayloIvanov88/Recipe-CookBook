@@ -1,6 +1,8 @@
 package src.services;
 
 import org.jetbrains.annotations.NotNull;
+import src.constants.Constants;
+import src.constants.Massages;
 import src.user.User;
 
 import java.util.List;
@@ -30,12 +32,11 @@ public class UserService {
 
     }
 
-    static final String DELIMITER = "delimiter";
     public static final Scanner SCANNER = new Scanner(System.in);
 
 
     public static String getUserChoose(String message) {
-        System.out.println(RecipeService.ANSI_RED + message + RecipeService.ANSI_RESET);
+        System.out.println(Constants.ANSI_RED + message +Constants.ANSI_RESET);
         return SCANNER.nextLine();
     }
 
@@ -43,39 +44,39 @@ public class UserService {
     public static String[] getUsersChooseFileToAdd(String recipeName, int voteCount, double rating) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(recipeName).append(DELIMITER);
+        sb.append(recipeName).append(Constants.DELIMITER);
 
         System.out.println("How many portions ?");
         String toAppendYield = SCANNER.nextLine();
-        sb.append(toAppendYield).append(DELIMITER);
+        sb.append(toAppendYield).append(Constants.DELIMITER);
 
         System.out.println("Preparation time ?");
         String toAppendPreparationTime = SCANNER.nextLine();
-        sb.append(toAppendPreparationTime).append(DELIMITER);
+        sb.append(toAppendPreparationTime).append(Constants.DELIMITER);
 
         System.out.println("What are ingredients ?");
         String toAppendIngredients = SCANNER.nextLine();
-        sb.append(toAppendIngredients).append(DELIMITER);
+        sb.append(toAppendIngredients).append(Constants.DELIMITER);
 
         System.out.println("What are the preparation steps ?");
 
         String toAppendThirdStep = SCANNER.nextLine();
-        sb.append(toAppendThirdStep).append(DELIMITER);
+        sb.append(toAppendThirdStep).append(Constants.DELIMITER);
 
         if (rating == 0 && voteCount == 0) {
             String toAppendDefaultRating = "0";
-            sb.append(toAppendDefaultRating).append(DELIMITER);
+            sb.append(toAppendDefaultRating).append(Constants.DELIMITER);
 
             String toAppendDefaultVoteCount = "0";
-            sb.append(toAppendDefaultVoteCount).append(DELIMITER);
+            sb.append(toAppendDefaultVoteCount).append(Constants.DELIMITER);
         } else {
             String toAppendRating = String.valueOf(rating);
-            sb.append(toAppendRating).append(DELIMITER);
+            sb.append(toAppendRating).append(Constants.DELIMITER);
 
             String toAppendVoteCount = String.valueOf(voteCount);
-            sb.append(toAppendVoteCount).append(DELIMITER);
+            sb.append(toAppendVoteCount).append(Constants.DELIMITER);
         }
-        return sb.toString().split(DELIMITER);
+        return sb.toString().split(Constants.DELIMITER);
 
     }
 
@@ -84,7 +85,7 @@ public class UserService {
             int age = Integer.parseInt(userChoose);
             return age >= 18;
         } catch (NumberFormatException e) {
-            System.err.println("Enter age in digits.");
+            System.err.println(Massages.ENTER_AGE_IN_DIGITS);
         }
         return false;
     }

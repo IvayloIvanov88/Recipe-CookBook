@@ -1,13 +1,15 @@
 package src.application;
 
 
-import src.recipe.*;
+import src.constants.Massages;
+import src.entities.*;
 import src.services.*;
 import src.user.User;
 
 import java.util.*;
 import java.util.List;
 
+import static src.constants.Constants.*;
 import static src.services.CSVFileService.updateCSV;
 import static src.services.RecipeService.*;
 import static src.services.UserService.SCANNER;
@@ -15,9 +17,6 @@ import static src.services.UserService.SCANNER;
 
 public class Demo {
 
-    private static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
-    private static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
-    public static final String USERS_DATA_PATH = "src/main/java/src/users.csv";
     public static Map<String, User> usersData = new HashMap<>();
 
     public static void main(String[] args) {
@@ -71,7 +70,7 @@ public class Demo {
                 switch (choose) {
                     case "1":
                         printAllRecipesByName(defaultRecipes);
-                        String userChooseRecipe = UserService.getUserChoose("Enter number of recipe that you want to view");
+                        String userChooseRecipe = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(defaultRecipes, userChooseRecipe);
                         break;
 
@@ -109,7 +108,7 @@ public class Demo {
 
                         List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
                         if (recipeByPartOfName.isEmpty()) {
-                            System.err.println("There is no such recipe");
+                            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
                             break;
                         }
                         if (recipeByPartOfName.size() == 1) {
@@ -126,7 +125,7 @@ public class Demo {
                             break;
                         }
                         printAllRecipesByName(recipeByPartOfName);
-                        String userChooseToView = UserService.getUserChoose("Enter number of recipe that you want to view");
+                        String userChooseToView = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(recipeByPartOfName, userChooseToView);
                         break;
                     case "6":
@@ -134,7 +133,7 @@ public class Demo {
 
                         List<Recipe> recipeByFilter = getRecipeByFilter(defaultRecipes, choose);
                         if (recipeByFilter.isEmpty()) {
-                            System.err.println("There is no such recipe");
+                            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
                             break;
                         }
                         if (recipeByFilter.size() == 1) {

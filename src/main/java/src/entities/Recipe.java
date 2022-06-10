@@ -1,10 +1,10 @@
-package src.recipe;
+package src.entities;
 
 import java.util.*;
 
 import static java.lang.String.format;
-import static src.services.RecipeService.ANSI_RED;
-import static src.services.RecipeService.ANSI_RESET;
+import static src.constants.Constants.ANSI_RED;
+import static src.constants.Constants.ANSI_RESET;
 
 public abstract class Recipe {
     private String name;

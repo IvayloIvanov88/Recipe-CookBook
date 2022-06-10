@@ -2,8 +2,9 @@ package src.services;
 
 import java.io.IOException;
 
-import static src.services.RecipeService.ANSI_RED;
-import static src.services.RecipeService.ANSI_RESET;
+import static src.constants.Constants.ANSI_RED;
+import static src.constants.Constants.ANSI_RESET;
+
 
 public class MenuService {
     private MenuService() {

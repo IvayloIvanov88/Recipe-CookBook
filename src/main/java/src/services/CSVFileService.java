@@ -3,6 +3,7 @@ package src.services;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import src.constants.Massages;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ public class CSVFileService {
     private CSVFileService() {
     }
 
-    private static final String FILE_NOT_FOUND = "File not found.";
 
     public static List<String[]> readFromCSV(String fileName) {
         List<String[]> allData = null;
@@ -25,7 +25,7 @@ public class CSVFileService {
             }
             filereader.close();
         } catch (IOException e) {
-            System.err.println(FILE_NOT_FOUND);
+            System.err.println(Massages.FILE_NOT_FOUND);
         }
         return allData;
     }
@@ -43,7 +43,7 @@ public class CSVFileService {
                 writer.flush();
             }
         } catch (IOException e) {
-            System.err.println(FILE_NOT_FOUND);
+            System.err.println(Massages.FILE_NOT_FOUND);
         }
     }
 
@@ -63,9 +63,9 @@ public class CSVFileService {
                 }
             }
         } catch (IOException e) {
-            System.err.println(FILE_NOT_FOUND);
+            System.err.println(Massages.FILE_NOT_FOUND);
         } catch (IndexOutOfBoundsException e) {
-            System.err.println("Index out of bounds");
+            System.err.println(Massages.INDEX_OUT_OF_BOUNDS);
         }
     }
 
@@ -83,22 +83,22 @@ public class CSVFileService {
                 String currentRecipeName = strArray[0];
                 for (int j = strArray.length - 1; j >= 0; j--) {
                     if (currentRecipeName.equalsIgnoreCase(recipeName)) {
-                        if (strArray[j].equalsIgnoreCase(oldDataWithoutZero)) { //String to be replaced
-                            strArray[j] = updateData;//Target replacement
+                        if (strArray[j].equalsIgnoreCase(oldDataWithoutZero)) {
+                            strArray[j] = updateData;
                             break;
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println(FILE_NOT_FOUND);
+            System.err.println(Massages.FILE_NOT_FOUND);
 
         }
         try (CSVWriter writer = new CSVWriter(new FileWriter(inputFile))) {
             writer.writeAll(csvBody);
             writer.flush();
         } catch (IOException e) {
-            System.err.println(FILE_NOT_FOUND);
+            System.err.println(Massages.FILE_NOT_FOUND);
         }
     }
 }

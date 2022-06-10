@@ -1,6 +1,6 @@
 package src.services;
 
-import src.recipe.*;
+import src.entities.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,11 +32,11 @@ public class RecipeSupplier {
         recipesType.put("alaminut", AlaminutRecipe::new);
         recipesType.put("eggs", AlaminutRecipe::new);
 
-        recipesType.put("dough", PastaRecipe::new);
-        recipesType.put("pasta", PastaRecipe::new);
-        recipesType.put("bread", PastaRecipe::new);
-        recipesType.put("easter", PastaRecipe::new);
-        recipesType.put("pancakes", PastaRecipe::new);
+        recipesType.put("dough", DoughRecipe::new);
+        recipesType.put("pasta", DoughRecipe::new);
+        recipesType.put("bread", DoughRecipe::new);
+        recipesType.put("easter", DoughRecipe::new);
+        recipesType.put("pancakes", DoughRecipe::new);
 
         recipesType.put("cocktail", CocktailRecipe::new);
         recipesType.put("cocktails", CocktailRecipe::new);

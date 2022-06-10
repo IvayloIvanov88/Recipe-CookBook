@@ -1,6 +1,8 @@
 package src.services;
 
-import src.recipe.*;
+import src.constants.Constants;
+import src.constants.Massages;
+import src.entities.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,9 +11,7 @@ import java.util.stream.Collectors;
 
 
 public class RecipeService {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
+
     static Scanner scanner = new Scanner(System.in);
 
     private RecipeService() {
@@ -60,7 +60,7 @@ public class RecipeService {
         } catch (NumberFormatException e) {
             System.err.println("Enter only digits.");
         } catch (IndexOutOfBoundsException e) {
-            System.err.println("No such recipe.");
+            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
         }
 
     }
@@ -94,9 +94,9 @@ public class RecipeService {
             CSVFileService.writeInCSV(path, usersChooseFileToAddInCSV);
             List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
             addRecipesInList(recipes, usersChooseFileToAddInList);
-            System.out.println(ANSI_GREEN + "Recipe edited successfully." + ANSI_RESET);
+            System.out.println(Constants.ANSI_GREEN + "Recipe edited successfully." + Constants.ANSI_RESET);
         } else {
-            System.err.println("There is no such recipe.");
+            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
         }
     }
 
@@ -171,7 +171,7 @@ public class RecipeService {
             int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
             recipes.get(0).setUserRating(userRating);
         } catch (NumberFormatException e){
-            System.err.println("Enter integer number");
+            System.err.println(Massages.ENTER_INTEGER_NUMBER);
         }
 
         return recipes.get(0).getRating();

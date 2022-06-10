@@ -1,6 +1,7 @@
 package src.services;
 
 import src.application.Demo;
+import src.constants.Constants;
 import src.user.User;
 
 import javax.crypto.SecretKeyFactory;
@@ -12,7 +13,7 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.List;
 
-import static src.application.Demo.USERS_DATA_PATH;
+import static src.constants.Constants.USERS_DATA_PATH;
 
 
 public class AuthService {
@@ -31,7 +32,7 @@ public class AuthService {
 
     public boolean logIn(String username, String password) {
         if (isUserAuthenticated(username, password)) {
-            System.out.println(RecipeService.ANSI_GREEN + "Login successful." + RecipeService.ANSI_RESET);
+            System.out.println(Constants.ANSI_GREEN + "Login successful." + Constants.ANSI_RESET);
             return true;
         } else {
             System.err.println("Sorry, wrong username or password.");
@@ -52,7 +53,7 @@ public class AuthService {
             return false;
         } else {
             saveUser(user, path);
-            System.out.println(RecipeService.ANSI_GREEN + "User registered successfully." + RecipeService.ANSI_RESET);
+            System.out.println(Constants.ANSI_GREEN + "User registered successfully." + Constants.ANSI_RESET);
             return true;
         }
     }
@@ -116,7 +117,17 @@ public class AuthService {
         MenuService.signUpMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         String password = UserService.getUserChoose("Enter a password: ");
-        int age = Integer.parseInt(UserService.getUserChoose("Enter your age: "));
+        int age = 0;
+        boolean isAgeValid = false;
+        while (!isAgeValid) {
+            try {
+                age = Integer.parseInt(UserService.getUserChoose("Enter your age: "));
+                isAgeValid = age >= 0 && age < 120;
+            } catch (NumberFormatException e) {
+                System.err.println("Try again, enter age in digits.");
+                isAgeValid = false;
+            }
+        }
         boolean isSignUp = false;
         try {
             isSignUp = authService.signUp(username, password, age, USERS_DATA_PATH);

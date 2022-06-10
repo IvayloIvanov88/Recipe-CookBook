@@ -1,4 +1,4 @@
-package src.recipe;
+package src.entities;
 
 
 public class SoupRecipe extends Recipe{

@@ -1,12 +1,12 @@
-package src.recipe;
+package src.entities;
 
-public class PastaRecipe extends Recipe{
+public class DoughRecipe extends Recipe{
 
-    public PastaRecipe(String name, int serving, int prepTime, double rating, int voteCount) {
+    public DoughRecipe(String name, int serving, int prepTime, double rating, int voteCount) {
         super(name, serving, prepTime, rating, voteCount);
     }
 
-    public PastaRecipe() {
+    public DoughRecipe() {
         super();
     }
 
