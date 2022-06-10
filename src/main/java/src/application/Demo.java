@@ -4,7 +4,7 @@ package src.application;
 import src.constants.Massages;
 import src.entities.*;
 import src.services.*;
-import src.user.User;
+import src.entities.User;
 
 import java.util.*;
 import java.util.List;

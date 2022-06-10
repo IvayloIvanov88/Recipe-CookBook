@@ -2,7 +2,7 @@ package src.services;
 
 import src.application.Demo;
 import src.constants.Constants;
-import src.user.User;
+import src.entities.User;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

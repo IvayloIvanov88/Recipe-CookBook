@@ -3,7 +3,7 @@ package src.services;
 import org.jetbrains.annotations.NotNull;
 import src.constants.Constants;
 import src.constants.Massages;
-import src.user.User;
+import src.entities.User;
 
 import java.util.List;
 import java.util.Map;

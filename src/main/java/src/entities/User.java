@@ -1,4 +1,4 @@
-package src.user;
+package src.entities;
 
 public class User {
 
