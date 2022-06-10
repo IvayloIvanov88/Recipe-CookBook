@@ -75,7 +75,7 @@ public class Demo {
                         break;
 
                     case "2":
-                        String recipeName = UserService.getUserChoose("Enter recipe's name: ");
+                        String recipeName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
                             String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0);
                             CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
@@ -104,7 +104,7 @@ public class Demo {
                         }
                         break;
                     case "5":
-                        choose = UserService.getUserChoose("Enter recipe`s name.");
+                        choose = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
 
                         List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
                         if (recipeByPartOfName.isEmpty()) {
