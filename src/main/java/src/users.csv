@@ -1,3 +1,6 @@
 username,password,salt,age
-"user1","UXq0f6SSoRTE38K5soBjnsJk4tA=","ku9zLZcZawQ=","21"
-"user2","l7n9sw59QUn5FCoj88FVb+OM/Lk=","UuWANupav40=","17"
+user1,Fzwa61jFLU7ax946a6FaAFD+RF4=,CXBe9H9BeUY=,21
+user2,ktC3yZ6eWAij9mShz+s3QokCbcM=,FRky4BeS3Gs=,17
+user,ECRd6VgLCxahtrMwhBiptWRw3yg=,fEvScwJAW54=,30
+"test","pJfW6d39j66dEzUVXJwCb5IKeBk=","TU2n6bIm1+Y=","18"
+"user3","5yRsRQLScfOEFZdovWEUx+yiluw=","UeZJDbNCtrk=","19"

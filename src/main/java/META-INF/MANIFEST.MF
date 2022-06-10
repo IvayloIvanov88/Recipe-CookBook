@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: src.application.Demo
+Class-Path: protobuf-java-3.19.4.jar opencsv-4.1.jar commons-lang3-3.6.j
+ ar commons-logging-1.2.jar mysql-connector-java-8.0.29.jar commons-bean
+ utils-1.9.3.jar commons-collections-3.2.2.jar commons-text-1.1.jar anno
+ tations-20.1.0.jar
+

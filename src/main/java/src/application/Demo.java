@@ -15,14 +15,13 @@ import static src.services.UserService.SCANNER;
 
 public class Demo {
 
-
     private static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
     private static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
     public static final String USERS_DATA_PATH = "src/main/java/src/users.csv";
     public static Map<String, User> usersData = new HashMap<>();
 
-    public static void main(String[] args) throws Exception {
-
+    public static void main(String[] args) {
+        ConsoleArtService artGen = new ConsoleArtService();
 
         List<String[]> usersFileData = CSVFileService.readFromCSV(USERS_DATA_PATH);
         UserService.addUserInList(usersData, usersFileData);
@@ -37,21 +36,20 @@ public class Demo {
                     currentUser = AuthService.loginUser();
                     break;
                 case "2":
-                    if(AuthService.registerUser()){
+                    if (AuthService.registerUser()) {
                         currentUser = AuthService.loginUser();
                     }
                     break;
                 default:
                     System.out.println(ANSI_GREEN + "Try again, read carefully options." + ANSI_RESET);
             }
-            if (currentUser != null){
+            if (currentUser != null) {
                 break;
             }
             MenuService.showLoginOptions();
 
         }
-        //if authenticated
-        if(currentUser != null) {
+        if (currentUser != null) {
             List<Recipe> unhiddenRecipes = new ArrayList<>();
             List<Recipe> hiddenRecipes = new ArrayList<>();
 
@@ -73,8 +71,8 @@ public class Demo {
                 switch (choose) {
                     case "1":
                         printAllRecipesByName(defaultRecipes);
-//                    AtomicInteger count = new AtomicInteger(0);
-//                    defaultRecipes.forEach(r -> System.out.printf("%n%d. %s%n", count.addAndGet(1), r));
+                        String userChooseRecipe = UserService.getUserChoose("Enter number of recipe that you want to view");
+                        RecipeService.printRecipeByIndex(defaultRecipes, userChooseRecipe);
                         break;
 
                     case "2":
@@ -121,8 +119,9 @@ public class Demo {
                                 int oldVoteCount = recipeByPartOfName.get(0).getVoteCount();
                                 double oldRecipeRate = recipeByPartOfName.get(0).getRating();
                                 double newRecipeRate = evaluateRecipe(recipeByPartOfName);
-                                updateCSV(defaultRecipesPath, String.valueOf(recipeByPartOfName.get(0).getVoteCount()), String.valueOf(oldVoteCount), recipeByPartOfName.get(0).getName());
-                                updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate), recipeByPartOfName.get(0).getName());
+                                String evaluateRecipeName = recipeByPartOfName.get(0).getName();
+                                updateCSV(defaultRecipesPath, String.valueOf(recipeByPartOfName.get(0).getVoteCount()), String.valueOf(oldVoteCount), evaluateRecipeName);
+                                updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate), evaluateRecipeName);
                             }
                             break;
                         }
@@ -173,13 +172,11 @@ public class Demo {
                 MenuService.pressEnterToContinue();
                 MenuService.showOptions(Integer.toString(currentUser.getAge()));
             }
-            ConsoleArtService artGen = new ConsoleArtService();
-            artGen.draw("Goodbye", 13, ANSI_GREEN + "$" + ANSI_RESET);
             artGen.draw("Bon Appetit", 13, ANSI_RED + "#" + ANSI_RESET);
-        }else {
-            System.out.println("Authorization required");
+        } else {
+            System.out.println("\n\t\t\tAuthorization required");
+            artGen.draw("Goodbye", 11, ANSI_GREEN + "$" + ANSI_RESET);
+
         }
-
     }
-
 }

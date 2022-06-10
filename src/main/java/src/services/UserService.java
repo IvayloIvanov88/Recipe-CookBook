@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import static src.services.RecipeService.ANSI_RED;
-import static src.services.RecipeService.ANSI_RESET;
 
 public class UserService {
     private UserService() {
@@ -16,7 +14,7 @@ public class UserService {
 
 
     public static void addUserInList(Map<String, User> users, List<String[]> allData){
-        if (allData.size() > 0){
+        if (!allData.isEmpty()){
             for (String[] row : allData) {
                 User user = new User();
                 String username = row[0];
@@ -37,7 +35,7 @@ public class UserService {
 
 
     public static String getUserChoose(String message) {
-        System.out.println(ANSI_RED + message + ANSI_RESET);
+        System.out.println(RecipeService.ANSI_RED + message + RecipeService.ANSI_RESET);
         return SCANNER.nextLine();
     }
 

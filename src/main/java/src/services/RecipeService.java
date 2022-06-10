@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static src.services.UserService.DELIMITER;
 
 
 public class RecipeService {

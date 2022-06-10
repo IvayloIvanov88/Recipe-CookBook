@@ -14,6 +14,7 @@ import java.util.List;
 
 import static src.application.Demo.USERS_DATA_PATH;
 
+
 public class AuthService {
 
     private boolean isUserAuthenticated(String username, String password) {
@@ -30,10 +31,10 @@ public class AuthService {
 
     public boolean logIn(String username, String password) {
         if (isUserAuthenticated(username, password)) {
-            System.out.println("Login successful.");
+            System.out.println(RecipeService.ANSI_GREEN + "Login successful." + RecipeService.ANSI_RESET);
             return true;
         } else {
-            System.out.println("Sorry, wrong username or password.");
+            System.err.println("Sorry, wrong username or password.");
             return false;
         }
     }
@@ -47,11 +48,11 @@ public class AuthService {
         user.setSalt(salt);
         user.setAge(age);
         if (usernameExists(userName, path)) {
-            System.out.println("Username already exists. Try with another one");
+            System.err.println("Username already exists. Try with another one");
             return false;
         } else {
             saveUser(user, path);
-            System.out.println("User registered successfully.");
+            System.out.println(RecipeService.ANSI_GREEN + "User registered successfully." + RecipeService.ANSI_RESET);
             return true;
         }
     }
@@ -130,7 +131,7 @@ public class AuthService {
         MenuService.loginMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         String password = UserService.getUserChoose("Enter a password: ");
-
+//        String password = PasswordField.readPassword("Enter a password:\n");
         try {
             if (authService.logIn(username, password)) {
                 return Demo.usersData.get(username);
