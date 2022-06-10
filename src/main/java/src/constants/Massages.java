@@ -1,6 +1,9 @@
 package src.constants;
 
 public class Massages {
+    private Massages() {
+    }
+
     public static final String FILE_NOT_FOUND = "File not found.";
     public static final String ENTER_NUMBER_OF_RECIPE = "Enter number of recipe that you want to view.";
     public static final String THERE_IS_NO_SUCH_RECIPE = "There is no such recipe.";

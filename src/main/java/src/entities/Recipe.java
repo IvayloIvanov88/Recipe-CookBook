@@ -99,9 +99,6 @@ public abstract class Recipe {
         }
     }
 
-    public int getPrepTime() {
-        return prepTime;
-    }
 
     public double getUserRating() {
         return userRating;
@@ -115,9 +112,6 @@ public abstract class Recipe {
         }
     }
 
-    public int getServing() {
-        return serving;
-    }
 
     public void setServing(int serving) {
         if (serving <= 0) {

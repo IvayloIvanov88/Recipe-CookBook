@@ -12,7 +12,7 @@ public class DoughRecipe extends Recipe{
 
     @Override
     public String toString() {
-        return "Pasta recipe\n" + super.toString();
+        return "Dough recipe\n" + super.toString();
     }
 
 }

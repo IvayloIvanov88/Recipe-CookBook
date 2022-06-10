@@ -1,6 +1,9 @@
 package src.constants;
 
 public class Constants {
+    private Constants() {
+    }
+
     public static final String USERS_DATA_PATH = "src/main/java/src/users.csv";
     public static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
     public static final String HIDDEN_RECIPE_PATH = "src/main/java/src/hidden.csv";
