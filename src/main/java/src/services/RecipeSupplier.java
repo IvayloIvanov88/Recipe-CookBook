@@ -17,6 +17,8 @@ public class RecipeSupplier {
         recipesType.put("duck", MeatRecipe::new);
         recipesType.put("pork", MeatRecipe::new);
         recipesType.put("chicken", MeatRecipe::new);
+        recipesType.put("chorizo", MeatRecipe::new);
+        recipesType.put("meatballs", MeatRecipe::new);
 
         recipesType.put("meatless", MeatlessRecipe::new);
         recipesType.put("vegetarian", MeatlessRecipe::new);
@@ -28,14 +30,18 @@ public class RecipeSupplier {
 
         recipesType.put("jam", DessertRecipe::new);
         recipesType.put("dessert", DessertRecipe::new);
+        recipesType.put("cookies", DessertRecipe::new);
+        recipesType.put("chocolate", DessertRecipe::new);
+        recipesType.put("cake", DessertRecipe::new);
 
         recipesType.put("alaminut", AlaminutRecipe::new);
         recipesType.put("eggs", AlaminutRecipe::new);
 
         recipesType.put("dough", DoughRecipe::new);
+        recipesType.put("batter", DoughRecipe::new);
         recipesType.put("pasta", DoughRecipe::new);
         recipesType.put("bread", DoughRecipe::new);
-        recipesType.put("easter", DoughRecipe::new);
+        recipesType.put("pizza", DoughRecipe::new);
         recipesType.put("pancakes", DoughRecipe::new);
 
         recipesType.put("cocktail", CocktailRecipe::new);

@@ -1,4 +1,4 @@
-recipe_name,yield,preparation_time,ingredients,preparation,rating,vote_count,user
+recipe_name,servings,preparation_time,ingredients,preparation,rating,vote_count,user
 Sex on the beach cocktail,2,5,"ice,50ml vodka
 25ml peach schnapps
 2 oranges, juiced, plus 2 slices to garnish
@@ -7,4 +7,18 @@ glace cherries, to garnish (optional)","Fill two tall glasses with ice cubes. Po
 Divide the mixture between the two glasses and stir gently to combine.
  Garnish with the cocktail cherries and orange slices.",12,2,admin
 Mojito cocktail,2,5,"rum, suger, zesty lime and cooling soda water","Mix together ingredients for a winning drink no one will turn down. Devide the mixture between the two glasses, and have fun. Dring at least two glass for better mood. Keep away from childred",20,4,admin
-"secret soup","2","20","cucumber, yoghurt, water, slat, dill","start.cook.finish","0","0","user1"
+Beer batter,8,40,"1 and 1/2 cups beer, 1 teespoon garlic powder, 1/2 teaspoond ground black pepper,
+1 beaten egg, 1 cup flour","Combine flour, egg, garlic powder, and black pepper in a medium bowl. Whisk in 1 cup of beer until smooth. 
+Thin batter with up to 1/2 cup additional beer, if desired.
+roll chicken wings, shrimp or whatever you want to taste and fry",15,3,user1
+Italian baked meatballs,6,55,"1 cup italian-seasoned bread crumbs, 1/4 cup grated Romano cheese,
+2 tablespoons chopped fresh parsley, 1/2 teaspoon salt, 1/2 teaspoond ground black pepper,
+2 eggs, garlic, 2 pounds ground beef","Preheat the oven to 350 degrees F (175 degrees C). Mix bread crumbs, Romano cheese, parsley, salt, pepper, garlic powder, and onion powder together. Combine with water and eggs. Add ground beef and mix well. Roll mixture into balls and place on a nonstick baking sheet. Bake in the preheated oven until browned, about 30 minutes.",10,2,user1
+American-Italian style salad,15,25,"1 package fusili pasta, 1 cup mayonnaise,
+1 cupsour cream, 2 tablespoons milk
+1 cup petite peas, 2 cans sliced black olives,1 cup Genoa salami
+3/4 cup chopped grean onions, Italian style dressing,
+1/2 cup chopped freshy parsley","In a large pot of salted boiling water, cook pasta until al dente, rinse under cold water, and drain. In a medium bowl, combine mayonnaise, sour cream, milk and Italian dressing mix. Whisk together until smooth, set aside. In a large salad bowl combine cooked and cooled pasta, peas, olives, salami, green onions, celery and parsley. Mix in dressing last, reserving 1/2 cup. Let sit overnight in fridge. Stir before serving. Add extra dressing if pasta appears dry.",6,1,user
+Eclair cake,8,180,"3 cups milk, 1 container frozen whipped topping,
+1 packege graham cracker squares, 2 packages vanilla pudding
+1 package prepared chocolate frosting","Stir milk, whipped topping, and pudding mix together in a medium bowl until well combined. Arrange a single layer of graham cracker squares in the bottom of a 9x13-inch baking pan. Evenly spread half of the pudding mixture over the crackers. Top with another layer of crackers and the remaining pudding mixture. Top with a final layer of graham crackers. Cover and refrigerate for 30 minutes. Spread frosting over the chilled cake up to the edges of the pan. Cover again and chill for at least 3 1/2 hours before serving.",6,1,user
