@@ -6,7 +6,6 @@ import src.entities.User;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.io.Console;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -14,10 +13,8 @@ import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.util.Scanner;
 
 import static src.constants.Constants.USERS_DATA_PATH;
-import static src.services.RecipeService.scanner;
 import static src.services.UserService.SCANNER;
 
 
@@ -29,7 +26,7 @@ public class AuthService {
         if (user != null) {
             String salt = user.getSalt();
             String calculatedHash = getEncryptedPassword(password, salt);
-            password = null;
+            Arrays.fill(password,'*');
             return calculatedHash.equals(user.getPassword());
         } else {
             return false;
@@ -38,7 +35,7 @@ public class AuthService {
 
     public boolean logIn(String username, char[] password) {
         if (isUserAuthenticated(username, password)) {
-            password = null;
+            Arrays.fill(password,'*');
             System.out.println(Constants.ANSI_GREEN + "Login successful." + Constants.ANSI_RESET);
             return true;
         } else {
@@ -50,7 +47,8 @@ public class AuthService {
     public boolean signUp(String userName, char[] password, int age, String path) {
         String salt = getNewSalt();
         String encryptedPassword = getEncryptedPassword(password, salt);
-        password = null;
+        Arrays.fill(password,'*');
+
         User user = new User();
         user.setPassword(encryptedPassword);
         user.setUsername(userName);
@@ -79,8 +77,7 @@ public class AuthService {
 
         byte[] saltBytes = Base64.getDecoder().decode(salt);
         KeySpec spec = new PBEKeySpec(password, saltBytes, iterations, derivedKeyLength);
-        password = null;
-//        Arrays.fill(password,'*');
+        Arrays.fill(password,'*');
         SecretKeyFactory f = null;
         try {
             f = SecretKeyFactory.getInstance(algorithm);
@@ -163,8 +160,7 @@ public class AuthService {
         System.err.println("Enter a password");
         char[] password = SCANNER.nextLine().toCharArray();
 
-        for (int i = 0; i < password.length; i++) {
-            char c = password[i];
+        for (char c : password) {
             if (Character.isUpperCase(c))
                 uppercaseCounter++;
             else if (Character.isLowerCase(c))
@@ -193,7 +189,6 @@ public class AuthService {
                 System.out.println("Minimum 2 special characters");
 
         }
-//        password = null;
         Arrays.fill(password,'*');
         return validatePassword();
     }
