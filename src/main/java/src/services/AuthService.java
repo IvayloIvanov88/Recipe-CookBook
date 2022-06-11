@@ -12,8 +12,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static src.constants.Constants.USERS_DATA_PATH;
 import static src.services.UserService.SCANNER;
@@ -152,7 +150,7 @@ public class AuthService {
         final int MIN_Uppercase = 2;
         final int MIN_Lowercase = 2;
         final int NUM_Digits = 2;
-        final int Special = 2;
+        final int SPECIAL = 2;
         int uppercaseCounter = 0;
         int lowercaseCounter = 0;
         int digitCounter = 0;
@@ -174,20 +172,20 @@ public class AuthService {
         }
 
         if (password.length() >= MAX && uppercaseCounter >= MIN_Uppercase
-                && lowercaseCounter >= MIN_Lowercase && digitCounter >= NUM_Digits && specialCounter >= Special) {
+                && lowercaseCounter >= MIN_Lowercase && digitCounter >= NUM_Digits && specialCounter >= SPECIAL) {
             System.out.println("Valid Password");
             return password;
         } else {
             System.out.println("Your password does not contain the following:");
             if (password.length() < MAX)
-                System.out.println(" atleast 8 characters.");
+                System.out.println("At least 8 characters.");
             if (lowercaseCounter < MIN_Lowercase)
                 System.out.println("Minimum 2 lowercase letters.");
             if (uppercaseCounter < MIN_Uppercase)
                 System.out.println("Minimum 2 uppercase letters.");
             if (digitCounter < NUM_Digits)
                 System.out.println("Minimum 2 digits.");
-            if (specialCounter < Special)
+            if (specialCounter < SPECIAL)
                 System.out.println("Minimum 2 special characters");
 
         }

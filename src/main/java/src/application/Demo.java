@@ -72,6 +72,10 @@ public class Demo {
                         printAllRecipesByName(defaultRecipes);
                         String userChooseRecipe = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(defaultRecipes, userChooseRecipe);
+                        if (isRecipeSubjectOfEvaluation()) {
+                            Recipe recipe = defaultRecipes.get(Integer.parseInt(userChooseRecipe)-1);
+                            recipeEvaluateSystem(defaultRecipesPath, recipe);
+                        }
                         break;
 
                     case "2":
@@ -113,15 +117,8 @@ public class Demo {
                         }
                         if (recipeByPartOfName.size() == 1) {
                             recipeByPartOfName.forEach(System.out::println);
-                            if (isRecipeSubjectOfEvaluation()) {
-
-                                int oldVoteCount = recipeByPartOfName.get(0).getVoteCount();
-                                double oldRecipeRate = recipeByPartOfName.get(0).getRating();
-                                double newRecipeRate = evaluateRecipe(recipeByPartOfName);
-                                String evaluateRecipeName = recipeByPartOfName.get(0).getName();
-                                updateCSV(defaultRecipesPath, String.valueOf(recipeByPartOfName.get(0).getVoteCount()), String.valueOf(oldVoteCount), evaluateRecipeName);
-                                updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate), evaluateRecipeName);
-                            }
+                            if (isRecipeSubjectOfEvaluation())
+                                recipeEvaluateSystem(defaultRecipesPath, recipeByPartOfName.get(0));
                             break;
                         }
                         printAllRecipesByName(recipeByPartOfName);
@@ -178,4 +175,5 @@ public class Demo {
 
         }
     }
+
 }

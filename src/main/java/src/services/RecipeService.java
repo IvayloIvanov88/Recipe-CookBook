@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static src.services.CSVFileService.updateCSV;
 
 
 public class RecipeService {
@@ -166,14 +167,23 @@ public class RecipeService {
         return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
     }
 
-    public static double evaluateRecipe(List<Recipe> recipes) {
+    public static double evaluateRecipe(Recipe recipe) {
         try {
             int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
-            recipes.get(0).setUserRating(userRating);
+            recipe.setUserRating(userRating);
         } catch (NumberFormatException e){
             System.err.println(Massages.ENTER_INTEGER_NUMBER);
         }
 
-        return recipes.get(0).getRating();
+        return recipe.getRating();
+    }
+
+    public static void recipeEvaluateSystem(String defaultRecipesPath, Recipe recipesToEvaluate) {
+        int oldVoteCount = recipesToEvaluate.getVoteCount();
+        double oldRecipeRate = recipesToEvaluate.getRating();
+        double newRecipeRate = evaluateRecipe(recipesToEvaluate);
+        String evaluateRecipeName = recipesToEvaluate.getName();
+        updateCSV(defaultRecipesPath, String.valueOf(recipesToEvaluate.getVoteCount()), String.valueOf(oldVoteCount), evaluateRecipeName);
+        updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate), evaluateRecipeName);
     }
 }
