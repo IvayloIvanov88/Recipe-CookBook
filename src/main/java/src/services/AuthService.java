@@ -6,6 +6,7 @@ import src.entities.User;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.io.Console;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -13,8 +14,10 @@ import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Scanner;
 
 import static src.constants.Constants.USERS_DATA_PATH;
+import static src.services.RecipeService.scanner;
 import static src.services.UserService.SCANNER;
 
 
@@ -77,6 +80,7 @@ public class AuthService {
         byte[] saltBytes = Base64.getDecoder().decode(salt);
         KeySpec spec = new PBEKeySpec(password, saltBytes, iterations, derivedKeyLength);
         password = null;
+//        Arrays.fill(password,'*');
         SecretKeyFactory f = null;
         try {
             f = SecretKeyFactory.getInstance(algorithm);
@@ -124,11 +128,6 @@ public class AuthService {
         String username = UserService.getUserChoose("Enter a username: ");
         char[] password = validatePassword();
         System.out.println(password);
-        //validate user password using regEx,but doesn't print what is wrong
-//        String password = null;
-//        do {
-//            password = UserService.getUserChoose("Enter a password: ");
-//        } while (!isValidPassword(password));
 
         int age = 0;
         boolean isAgeValid = false;
@@ -194,7 +193,8 @@ public class AuthService {
                 System.out.println("Minimum 2 special characters");
 
         }
-        password = null;
+//        password = null;
+        Arrays.fill(password,'*');
         return validatePassword();
     }
 
@@ -209,9 +209,10 @@ public class AuthService {
         MenuService.loginMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         char[] password = UserService.getUserChoose("Enter a password: ").toCharArray();
+//        char[] password = PasswordFieldService.readPassword("Enter a password:\n");
+
         try {
             if (authService.logIn(username, password)) {
-                System.out.println(password);
                 return Demo.usersData.get(username);
             }
 

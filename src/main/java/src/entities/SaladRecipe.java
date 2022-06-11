@@ -12,8 +12,8 @@ public class SaladRecipe extends Recipe{
     }
     @Override
     public void setPrepTime(int prepTime) {
-        if (prepTime > 20) {
-            System.err.println("The salad recipe should be prepared within 20 minutes");
+        if (prepTime > 60) {
+            System.err.println("The salad recipe should be prepared within 60 minutes");
         } else {
             super.setPrepTime(prepTime);
         }
