@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -19,20 +20,22 @@ import static src.services.UserService.SCANNER;
 
 public class AuthService {
 
-    private boolean isUserAuthenticated(String username, String password) {
+    private boolean isUserAuthenticated(String username, char[] password) {
         User user = Demo.usersData.get(username);
 
         if (user != null) {
             String salt = user.getSalt();
             String calculatedHash = getEncryptedPassword(password, salt);
+            password = null;
             return calculatedHash.equals(user.getPassword());
         } else {
             return false;
         }
     }
 
-    public boolean logIn(String username, String password) {
+    public boolean logIn(String username, char[] password) {
         if (isUserAuthenticated(username, password)) {
+            password = null;
             System.out.println(Constants.ANSI_GREEN + "Login successful." + Constants.ANSI_RESET);
             return true;
         } else {
@@ -41,9 +44,10 @@ public class AuthService {
         }
     }
 
-    public boolean signUp(String userName, String password, int age, String path) {
+    public boolean signUp(String userName, char[] password, int age, String path) {
         String salt = getNewSalt();
         String encryptedPassword = getEncryptedPassword(password, salt);
+        password = null;
         User user = new User();
         user.setPassword(encryptedPassword);
         user.setUsername(userName);
@@ -65,13 +69,14 @@ public class AuthService {
     }
 
 
-    public String getEncryptedPassword(String password, String salt) {
+    public String getEncryptedPassword(char[] password, String salt) {
         String algorithm = "PBKDF2WithHmacSHA1";
         int derivedKeyLength = 160;
         int iterations = 20000;
 
         byte[] saltBytes = Base64.getDecoder().decode(salt);
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), saltBytes, iterations, derivedKeyLength);
+        KeySpec spec = new PBEKeySpec(password, saltBytes, iterations, derivedKeyLength);
+        password = null;
         SecretKeyFactory f = null;
         try {
             f = SecretKeyFactory.getInstance(algorithm);
@@ -117,8 +122,8 @@ public class AuthService {
         AuthService authService = new AuthService();
         MenuService.signUpMessage();
         String username = UserService.getUserChoose("Enter a username: ");
-        String password = validatePassword();
-
+        char[] password = validatePassword();
+        System.out.println(password);
         //validate user password using regEx,but doesn't print what is wrong
 //        String password = null;
 //        do {
@@ -145,7 +150,7 @@ public class AuthService {
         return isSignUp;
     }
 
-    private static String validatePassword() {
+    private static char[] validatePassword() {
         final int MAX = 8;
         final int MIN_Uppercase = 2;
         final int MIN_Lowercase = 2;
@@ -157,10 +162,10 @@ public class AuthService {
         int specialCounter = 0;
 
         System.err.println("Enter a password");
-        String password = SCANNER.nextLine();
+        char[] password = SCANNER.nextLine().toCharArray();
 
-        for (int i = 0; i < password.length(); i++) {
-            char c = password.charAt(i);
+        for (int i = 0; i < password.length; i++) {
+            char c = password[i];
             if (Character.isUpperCase(c))
                 uppercaseCounter++;
             else if (Character.isLowerCase(c))
@@ -171,13 +176,13 @@ public class AuthService {
                 specialCounter++;
         }
 
-        if (password.length() >= MAX && uppercaseCounter >= MIN_Uppercase
+        if (password.length >= MAX && uppercaseCounter >= MIN_Uppercase
                 && lowercaseCounter >= MIN_Lowercase && digitCounter >= NUM_Digits && specialCounter >= SPECIAL) {
             System.out.println("Valid Password");
             return password;
         } else {
             System.out.println("Your password does not contain the following:");
-            if (password.length() < MAX)
+            if (password.length < MAX)
                 System.out.println("At least 8 characters.");
             if (lowercaseCounter < MIN_Lowercase)
                 System.out.println("Minimum 2 lowercase letters.");
@@ -189,6 +194,7 @@ public class AuthService {
                 System.out.println("Minimum 2 special characters");
 
         }
+        password = null;
         return validatePassword();
     }
 
@@ -202,12 +208,14 @@ public class AuthService {
         AuthService authService = new AuthService();
         MenuService.loginMessage();
         String username = UserService.getUserChoose("Enter a username: ");
-        String password = UserService.getUserChoose("Enter a password: ");
+        char[] password = UserService.getUserChoose("Enter a password: ").toCharArray();
 //        String password = PasswordField.readPassword("Enter a password:\n");
         try {
             if (authService.logIn(username, password)) {
+                System.out.println(password);
                 return Demo.usersData.get(username);
             }
+
         } catch (Exception e) {
             System.err.println("Login unsuccessful.");
         }
