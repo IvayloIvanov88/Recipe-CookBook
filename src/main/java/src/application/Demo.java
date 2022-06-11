@@ -81,7 +81,7 @@ public class Demo {
                     case "2":
                         String recipeName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
-                            String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0);
+                            String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0, currentUser);
                             CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
 
                             List<String[]> filesToAddInList = new ArrayList<>(Collections.singleton(filesToAddInCSV));
@@ -94,7 +94,7 @@ public class Demo {
 
                     case "3":
                         printAllRecipesByName(defaultRecipes);
-                        editRecipe(defaultRecipesPath, defaultRecipesData, defaultRecipes);
+                        editRecipe(defaultRecipesPath, defaultRecipesData, defaultRecipes, currentUser);
                         break;
                     case "4":
                         printAllRecipesByName(defaultRecipes);
@@ -152,7 +152,7 @@ public class Demo {
                             break;
                         }
                         defaultRecipesPath = HIDDEN_RECIPE_PATH;
-                        defaultRecipes = hiddenRecipes;
+                        defaultRecipes = getRecipesByUser(hiddenRecipes, currentUser.getUsername());
                         defaultRecipesData = hiddenRecipesData;
                         break;
                     case "back":

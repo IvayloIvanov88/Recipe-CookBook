@@ -1,9 +1,10 @@
-recipe_name,yield,preparation_time,ingredients,preparation,rating,vote_count
+recipe_name,yield,preparation_time,ingredients,preparation,rating,vote_count,user
 Sex on the beach cocktail,2,5,"ice,50ml vodka
 25ml peach schnapps
 2 oranges, juiced, plus 2 slices to garnish
 50ml cranberry juice
 glace cherries, to garnish (optional)","Fill two tall glasses with ice cubes. Pour the vodka, peach schnapps and fruit juices into a large jug and stir.
 Divide the mixture between the two glasses and stir gently to combine.
- Garnish with the cocktail cherries and orange slices.",12,2
-Mojito cocktail,2,5,"rum, suger, zesty lime and cooling soda water","Mix together ingredients for a winning drink no one will turn down. Devide the mixture between the two glasses, and have fun. Dring at least two glass for better mood. Keep away from childred",20,4
+ Garnish with the cocktail cherries and orange slices.",12,2,admin
+Mojito cocktail,2,5,"rum, suger, zesty lime and cooling soda water","Mix together ingredients for a winning drink no one will turn down. Devide the mixture between the two glasses, and have fun. Dring at least two glass for better mood. Keep away from childred",20,4,admin
+"secret soup","2","20","cucumber, yoghurt, water, slat, dill","start.cook.finish","0","0","user1"

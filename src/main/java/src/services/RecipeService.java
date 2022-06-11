@@ -48,6 +48,11 @@ public class RecipeService {
                 .filter(r -> Objects.equals(r.getClass().getSimpleName().toLowerCase(), (filter + "recipe").toLowerCase()))
                 .collect(Collectors.toList());
     }
+    public static List<Recipe> getRecipesByUser(List<Recipe> recipes, String username) {
+        return recipes.stream()
+                .filter(r -> r.getOwner().equals(username))
+                .collect(Collectors.toList());
+    }
 
     public static void printAllRecipesByName(List<Recipe> unhiddenRecipes) {
         AtomicInteger countRecipe = new AtomicInteger(0);
@@ -74,7 +79,7 @@ public class RecipeService {
         return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
     }
 
-    public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes) {
+    public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, User currentUser) {
 
         String recipeName = UserService.getUserChoose("Choose recipe by name to change.");
 
@@ -91,7 +96,7 @@ public class RecipeService {
             int idx = fileData.indexOf(currentRecipe) + 1;
             CSVFileService.deleteFromCSV(path, idx);
 
-            String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating);
+            String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating, currentUser);
             CSVFileService.writeInCSV(path, usersChooseFileToAddInCSV);
             List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
             addRecipesInList(recipes, usersChooseFileToAddInList);
@@ -136,6 +141,7 @@ public class RecipeService {
                     recipe.setRating(Double.parseDouble("0.00"));
                     recipe.setVoteCount(Integer.parseInt("0"));
                 }
+                recipe.setOwner(nextLine[7]);
 
                 recipes.add(recipe);
             }

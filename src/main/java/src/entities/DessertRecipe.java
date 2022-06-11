@@ -2,8 +2,8 @@ package src.entities;
 
 public class DessertRecipe extends Recipe{
 
-    public DessertRecipe(String name, int serving, int prepTime, double rating, int voteCount) {
-        super(name, serving, prepTime, rating, voteCount);
+    public DessertRecipe(String name, int serving, int prepTime, double rating, int voteCount, String owner) {
+        super(name, serving, prepTime, rating, voteCount, owner);
     }
 
     public DessertRecipe() {

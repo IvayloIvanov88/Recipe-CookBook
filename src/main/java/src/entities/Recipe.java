@@ -14,16 +14,18 @@ public abstract class Recipe {
     private int voteCount;
     private double rating;
     private double userRating = 0;
+    private String owner;
 
 
     private final Map<Integer, String> directions;
 
-    protected Recipe(String name, int serving, int prepTime, double rating, int voteCount) {
+    protected Recipe(String name, int serving, int prepTime, double rating, int voteCount, String owner) {
         this.setName(name);
         this.setServing(serving);
         this.setPrepTime(prepTime);
         this.setRating(rating);
         this.setVoteCount(voteCount);
+        this.setOwner(owner);
         this.ingredient = new ArrayList<>();
         this.directions = new HashMap<>();
     }
@@ -102,6 +104,14 @@ public abstract class Recipe {
 
     public double getUserRating() {
         return userRating;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public void addAllIngredient(List<String> ingredient) {

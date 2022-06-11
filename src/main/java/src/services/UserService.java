@@ -41,7 +41,7 @@ public class UserService {
     }
 
     @NotNull
-    public static String[] getUsersChooseFileToAdd(String recipeName, int voteCount, double rating) {
+    public static String[] getUsersChooseFileToAdd(String recipeName, int voteCount, double rating, User currentUser) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(recipeName).append(Constants.DELIMITER);
@@ -76,6 +76,9 @@ public class UserService {
             String toAppendVoteCount = String.valueOf(voteCount);
             sb.append(toAppendVoteCount).append(Constants.DELIMITER);
         }
+        String toAppendUsername = currentUser.getUsername();
+        sb.append(toAppendUsername).append(Constants.DELIMITER);
+
         return sb.toString().split(Constants.DELIMITER);
 
     }
