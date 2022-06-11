@@ -54,6 +54,7 @@ public abstract class Recipe {
         return format(
                 ANSI_RED + "Rating: " + ANSI_RESET + "%.2f of 6.00 by %d votes\n" +
                         ANSI_RED + "Recipe name is: " + ANSI_RESET + "%s\n" +
+                        ANSI_RED + "Uploaded by: " + ANSI_RESET + "%s\n" +
                         ANSI_RED + "ingredients are:\n" + ANSI_RESET + "%s.\n" +
                         ANSI_RED + "for: " + ANSI_RESET + "%d portions.\n" +
                         ANSI_RED + "Time for preparation: " + ANSI_RESET + "%d min.\n" +
@@ -61,6 +62,7 @@ public abstract class Recipe {
                 calcAvgRating(),
                 this.voteCount,
                 this.name,
+                this.owner,
                 String.join(",", this.ingredient),
                 this.serving,
                 this.prepTime,

@@ -11,5 +11,6 @@ public class Massages {
     public static final String ENTER_AGE_IN_DIGITS = "Enter age in digits.";
     public static final String ENTER_INTEGER_NUMBER = "Enter integer number.";
     public static final String ENTER_RECIPES_NAME = "Enter recipe's name: ";
+    public static final String NOT_YOUR_RECIPE = "This recipe is not yours. You can't edit or delete it.";
 
 }

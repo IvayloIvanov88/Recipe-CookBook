@@ -101,8 +101,7 @@ public class Demo {
                         choose = UserService.getUserChoose("Choose number to delete.");
                         try {
                             int userChoose = Integer.parseInt(choose);
-                            CSVFileService.deleteFromCSV(defaultRecipesPath, userChoose);
-                            defaultRecipes.remove(userChoose - 1);
+                            deleteRecipe(defaultRecipes, defaultRecipesPath, userChoose, currentUser);
                         } catch (NumberFormatException | IndexOutOfBoundsException e) {
                             System.err.println("Try with valid number!");
                         }

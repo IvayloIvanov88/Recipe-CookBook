@@ -87,23 +87,42 @@ public class RecipeService {
                 RecipeService.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
 
             List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
-
-            double rating = recipeByName.get(0).getRating();
-            int voteCount = recipeByName.get(0).getVoteCount();
-
+            Recipe recipe= recipeByName.get(0);
+            double rating = recipe.getRating();
+            int voteCount = recipe.getVoteCount();
+            String owner = recipe.getOwner();
             recipes.removeAll(recipeByName);
             String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
-            int idx = fileData.indexOf(currentRecipe) + 1;
-            CSVFileService.deleteFromCSV(path, idx);
 
-            String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating, currentUser);
-            CSVFileService.writeInCSV(path, usersChooseFileToAddInCSV);
-            List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
-            addRecipesInList(recipes, usersChooseFileToAddInList);
-            System.out.println(Constants.ANSI_GREEN + "Recipe edited successfully." + Constants.ANSI_RESET);
+            if (owner.equals(currentUser.getUsername()) || currentUser.getUsername().equals("admin")){
+                int idx = fileData.indexOf(currentRecipe) + 1;
+                CSVFileService.deleteFromCSV(path, idx);
+
+                String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating, currentUser);
+                CSVFileService.writeInCSV(path, usersChooseFileToAddInCSV);
+                List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
+                addRecipesInList(recipes, usersChooseFileToAddInList);
+                System.out.println(Constants.ANSI_GREEN + "Recipe edited successfully." + Constants.ANSI_RESET);
+            }else {
+                System.err.println(Massages.NOT_YOUR_RECIPE);
+            }
+
         } else {
             System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
         }
+    }
+    public static void deleteRecipe(List<Recipe> recipes, String path, int idx, User currentUser){
+        Recipe currentRecipe = recipes.get(idx-1);
+        String owner = currentRecipe.getOwner();
+
+        if (currentUser.getUsername().equals(owner) || currentUser.getUsername().equals("admin")){
+            CSVFileService.deleteFromCSV(path, idx);
+            recipes.remove(idx - 1);
+            System.out.println("Recipe deleted successfully!");
+        }else {
+            System.err.println(Massages.NOT_YOUR_RECIPE);
+        }
+
     }
 
     public static void addRecipesInList(List<Recipe> recipes, List<String[]> allData) {
