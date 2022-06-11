@@ -209,7 +209,6 @@ public class AuthService {
         MenuService.loginMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         char[] password = UserService.getUserChoose("Enter a password: ").toCharArray();
-//        String password = PasswordField.readPassword("Enter a password:\n");
         try {
             if (authService.logIn(username, password)) {
                 System.out.println(password);
