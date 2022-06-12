@@ -28,13 +28,13 @@ public class RecipeService {
         List<Recipe> filteredRecipes = new ArrayList<>();
         String[] fullName = filter.split("\\s+");
 
-        for (int i = 0; i < fullName.length; i++) {
+        for (String s : fullName) {
 
-            for (int j = 0; j < recipes.size(); j++) {
-                String[] name = recipes.get(j).getName().split("\\s+");
-                for (int k = 0; k < name.length; k++) {
-                    if (fullName[i].equalsIgnoreCase(name[k])) {
-                        filteredRecipes.add(recipes.get(j));
+            for (Recipe recipe : recipes) {
+                String[] name = recipe.getName().split("\\s+");
+                for (String value : name) {
+                    if (s.equalsIgnoreCase(value)) {
+                        filteredRecipes.add(recipe);
                     }
                 }
             }
@@ -48,6 +48,7 @@ public class RecipeService {
                 .filter(r -> Objects.equals(r.getClass().getSimpleName().toLowerCase(), (filter + "recipe").toLowerCase()))
                 .collect(Collectors.toList());
     }
+
     public static List<Recipe> getRecipesByUser(List<Recipe> recipes, String username) {
         return recipes.stream()
                 .filter(r -> r.getOwner().equals(username))
@@ -55,65 +56,67 @@ public class RecipeService {
     }
 
     public static void printAllRecipesByName(List<Recipe> recipes) {
-        if (recipes.size() < 50){
+        if (recipes.size() < 50) {
             AtomicInteger countRecipe = new AtomicInteger(0);
             recipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
-        }else {
+        } else {
             enablePagination(recipes);
         }
 
     }
 
-    public static void enablePagination(List<Recipe> recipes){
+    public static void enablePagination(List<Recipe> recipes) {
         System.out.printf("There are %d recipes in this book.\n", recipes.size());
         try {
             int perPage = Integer.parseInt(UserService.getUserChoose("Enter how many recipes per page: "));
             int currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
             paginateRecipes(recipes, perPage, currentPage);
-        }catch (NumberFormatException e){
-            System.err.println("Invalid input. Enter a number.");
+        } catch (NumberFormatException e) {
+            System.err.println(Massages.INVALID_INPUT + Massages.ENTER_NUMBER);
             enablePagination(recipes);
         }
 
     }
 
-    public static void paginateRecipes(List<Recipe> recipes, int perPage, int currentPage){
+    public static void paginateRecipes(List<Recipe> recipes, int perPage, int currentPage) {
         String result = getPages(recipes, perPage, currentPage);
-        if (!result.equals("")){
+        if (!result.equals("")) {
             System.out.println(result);
-            if (!stayOnThisPage(currentPage)){
+            if (!stayOnThisPage(currentPage)) {
                 try {
-                    currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
-                }catch (NumberFormatException e){
-                    System.err.println("Invalid input. Enter a number.");
+                    currentPage = Integer.parseInt(UserService.getUserChoose(Massages.ENTER_NUMBER));
+                } catch (NumberFormatException e) {
+                    System.err.println(Massages.INVALID_INPUT + Massages.ENTER_NUMBER);
                     currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
                 }
-                try{
+                try {
                     paginateRecipes(recipes, perPage, currentPage);
-                }catch (IndexOutOfBoundsException e){
+                } catch (IndexOutOfBoundsException e) {
                     System.out.println("No content. Redirecting to page 1:");
                     paginateRecipes(recipes, perPage, 1);
                 }
             }
-        }else{
+        } else {
             System.out.println("No content. Redirecting to page 1:");
             paginateRecipes(recipes, perPage, 1);
         }
     }
-    public static String getPages(List<Recipe> recipes, int perPage, int currentPage){
+
+    public static String getPages(List<Recipe> recipes, int perPage, int currentPage) {
         ListIterator<Recipe> itr;
         StringBuilder sb = new StringBuilder();
-        AtomicInteger countRecipe = new AtomicInteger(currentPage*perPage - perPage);
-        for (int i = (currentPage - 1) * perPage; i/perPage + 1 == currentPage && i < recipes.size(); i++) {
+        AtomicInteger countRecipe = new AtomicInteger(currentPage * perPage - perPage);
+        for (int i = (currentPage - 1) * perPage; i / perPage + 1 == currentPage && i < recipes.size(); i++) {
             itr = recipes.listIterator(i);
-            if (itr.hasNext()){
+            if (itr.hasNext()) {
                 sb.append(countRecipe.addAndGet(1)).append(" - ").append(itr.next().getName()).append("\n");
             }
         }
         return sb.toString();
     }
-    public static boolean stayOnThisPage(int pageNum){
-        String userChoose = UserService.getUserChoose("This is page "+ pageNum +"\nStay on this page? -> 'y' / 'n'");
+
+    public static boolean stayOnThisPage(int pageNum) {
+        String userChoose = UserService.getUserChoose("This is page " + pageNum + "\nStay on this page? -> 'y' / 'n'");
         return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
     }
 
@@ -121,11 +124,27 @@ public class RecipeService {
         try {
             System.out.println(recipeByPartOfName.get(Integer.parseInt(userChooseToView) - 1));
         } catch (NumberFormatException e) {
-            System.err.println("Enter only digits.");
+            System.err.println(Massages.ENTER_INTEGER_NUMBER);
         } catch (IndexOutOfBoundsException e) {
             System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
         }
 
+    }
+
+
+    public static void printRecipesByFilter(List<Recipe> cocktails) {
+        if (cocktails.isEmpty()) {
+            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
+            return;
+
+        }
+        if (cocktails.size() == 1) {
+            cocktails.forEach(System.out::println);
+            return;
+        }
+        printAllRecipesByName(cocktails);
+        String userChoose = UserService.getUserChoose("Enter number of recipe that you want to view");
+        RecipeService.printRecipeByIndex(cocktails, userChoose);
     }
 
     public static boolean isRecipeExist(List<String[]> fileData, String title) {
@@ -136,9 +155,9 @@ public class RecipeService {
         return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
     }
 
-    public static boolean isRecipeCocktail(String recipeName){
-        return  (recipeName.contains("cocktail")||recipeName.contains("drink")||
-                recipeName.contains("cocktails")||recipeName.contains("drinks")||recipeName.contains("alcohol"));
+    public static boolean isRecipeCocktail(String recipeName) {
+        return (recipeName.contains("cocktail") || recipeName.contains("drink") ||
+                recipeName.contains("cocktails") || recipeName.contains("drinks") || recipeName.contains("alcohol"));
     }
 
     public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, User currentUser) {
@@ -149,14 +168,14 @@ public class RecipeService {
                 RecipeService.isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
 
             List<Recipe> recipeByName = getRecipeByName(recipes, recipeName);
-            Recipe recipe= recipeByName.get(0);
+            Recipe recipe = recipeByName.get(0);
             double rating = recipe.getRating();
             int voteCount = recipe.getVoteCount();
             String owner = recipe.getOwner();
             recipes.removeAll(recipeByName);
             String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
 
-            if (owner.equals(currentUser.getUsername()) || currentUser.getUsername().equals("admin")){
+            if (owner.equals(currentUser.getUsername()) || currentUser.getUsername().equals("admin")) {
                 int idx = fileData.indexOf(currentRecipe) + 1;
                 CSVFileService.deleteFromCSV(path, idx);
 
@@ -165,7 +184,7 @@ public class RecipeService {
                 List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
                 addRecipesInList(recipes, usersChooseFileToAddInList, currentUser);
                 System.out.println(Constants.ANSI_GREEN + "Recipe edited successfully." + Constants.ANSI_RESET);
-            }else {
+            } else {
                 System.err.println(Massages.NOT_YOUR_RECIPE);
             }
 
@@ -173,15 +192,16 @@ public class RecipeService {
             System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
         }
     }
-    public static void deleteRecipe(List<Recipe> recipes, String path, int idx, User currentUser){
-        Recipe currentRecipe = recipes.get(idx-1);
+
+    public static void deleteRecipe(List<Recipe> recipes, String path, int idx, User currentUser) {
+        Recipe currentRecipe = recipes.get(idx - 1);
         String owner = currentRecipe.getOwner();
 
-        if (currentUser.getUsername().equals(owner) || currentUser.getUsername().equals("admin")){
+        if (currentUser.getUsername().equals(owner) || currentUser.getUsername().equals("admin")) {
             CSVFileService.deleteFromCSV(path, idx);
             recipes.remove(idx - 1);
             System.out.println("Recipe deleted successfully!");
-        }else {
+        } else {
             System.err.println(Massages.NOT_YOUR_RECIPE);
         }
 
@@ -223,9 +243,9 @@ public class RecipeService {
                     recipe.setVoteCount(Integer.parseInt("0"));
                 }
                 recipe.setOwner(nextLine[7]);
-                if (currentUser.getAge() < 18 && isRecipeCocktail(recipe.getName())){
+                if (currentUser.getAge() < 18 && isRecipeCocktail(recipe.getName())) {
                     return;
-                }else {
+                } else {
                     recipes.add(recipe);
                 }
             }
@@ -261,7 +281,7 @@ public class RecipeService {
         try {
             int userRating = Integer.parseInt(UserService.getUserChoose("Evaluate the recipe."));
             recipe.setUserRating(userRating);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.err.println(Massages.ENTER_INTEGER_NUMBER);
         }
 

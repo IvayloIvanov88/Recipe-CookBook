@@ -8,7 +8,6 @@ import src.entities.User;
 
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static src.constants.Constants.*;
 import static src.services.RecipeService.*;
@@ -29,7 +28,7 @@ public class Demo {
 
         MenuService.showLoginOptions();
         String choose = "";
-        while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
+        while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase(Massages.EXIT)) {
             switch (choose) {
                 case "1":
                     currentUser = AuthService.loginUser();
@@ -66,7 +65,7 @@ public class Demo {
             MenuService.showOptions(Integer.toString(currentUser.getAge()));
 
 
-            while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase("exit")) {
+            while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase(Massages.EXIT)) {
 
                 switch (choose) {
                     case "1":
@@ -84,10 +83,10 @@ public class Demo {
                     case "2":
                         String recipeName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
-                            if (RecipeService.isRecipeCocktail(recipeName) && currentUser.getAge() < 18){
-                                System.err.println("You are still very young!");
+                            if (RecipeService.isRecipeCocktail(recipeName) && currentUser.getAge() < 18) {
+                                System.err.println(Massages.YOU_ARE_YOUNG);
                                 break;
-                            }else{
+                            } else {
                                 String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0, currentUser);
                                 CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
 
@@ -138,32 +137,23 @@ public class Demo {
                         choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
 
                         List<Recipe> recipeByFilter = getRecipeByFilter(defaultRecipes, choose);
-                        if (recipeByFilter.isEmpty()) {
-                            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
-                            break;
-                        }
-                        if (recipeByFilter.size() == 1) {
-                            recipeByFilter.forEach(System.out::println);
-                            break;
-                        }
-                        printAllRecipesByName(recipeByFilter);
-                        String userChooseToView1 = UserService.getUserChoose("Enter number of recipe that you want to view");
-                        RecipeService.printRecipeByIndex(recipeByFilter, userChooseToView1);
+                        printRecipesByFilter(recipeByFilter);
                         break;
                     case "7":
                         defaultRecipesPath = HIDDEN_RECIPE_PATH;
                         defaultRecipes = getRecipesByUser(hiddenRecipes, currentUser.getUsername());
                         defaultRecipesData = hiddenRecipesData;
-                        System.out.println("Redirecting to hidden recipes menu.");
+                        System.out.println(ANSI_GREEN + "Redirecting to hidden recipes menu, all options is available\nTo go back type: back" + ANSI_RESET);
                         break;
                     case "8":
                         if (UserService.validateUserAge(Integer.toString(currentUser.getAge()))) {
                             System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" + ANSI_RESET);
                         } else {
-                            System.err.println("You are still very young!");
+                            System.err.println(Massages.YOU_ARE_YOUNG);
                             break;
                         }
-                        printAllRecipesByName(getRecipeByFilter(defaultRecipes,"cocktail"));
+                        List<Recipe> cocktails = getRecipeByFilter(defaultRecipes, "cocktail");
+                        printRecipesByFilter(cocktails);
                         break;
                     case "back":
                         System.out.println(ANSI_GREEN + "You are back to normal, unhidden recipes." + ANSI_RESET);
@@ -185,4 +175,5 @@ public class Demo {
 
         }
     }
+
 }
