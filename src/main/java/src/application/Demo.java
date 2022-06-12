@@ -10,14 +10,13 @@ import java.util.*;
 import java.util.List;
 
 import static src.constants.Constants.*;
-import static src.services.CSVFileService.updateCSV;
 import static src.services.RecipeService.*;
 import static src.services.UserService.SCANNER;
 
 
 public class Demo {
 
-    public static Map<String, User> usersData = new HashMap<>();
+    public static final Map<String, User> usersData = new HashMap<>();
 
     public static void main(String[] args) {
         ConsoleArtService artGen = new ConsoleArtService();
@@ -70,12 +69,14 @@ public class Demo {
                 switch (choose) {
                     case "1":
                         printAllRecipesByName(defaultRecipes);
+                        if (defaultRecipes.isEmpty()) {
+                            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
+                            break;
+                        }
                         String userChooseRecipe = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(defaultRecipes, userChooseRecipe);
-                        if (isRecipeSubjectOfEvaluation()) {
-                            Recipe recipe = defaultRecipes.get(Integer.parseInt(userChooseRecipe)-1);
-                            recipeEvaluateSystem(defaultRecipesPath, recipe);
-                        }
+                        if (isRecipeSubjectOfEvaluation())
+                            recipeEvaluateSystem(defaultRecipesPath, defaultRecipes.get(Integer.parseInt(userChooseRecipe) - 1));
                         break;
 
                     case "2":
@@ -123,6 +124,8 @@ public class Demo {
                         printAllRecipesByName(recipeByPartOfName);
                         String userChooseToView = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(recipeByPartOfName, userChooseToView);
+                        if (isRecipeSubjectOfEvaluation())
+                            recipeEvaluateSystem(defaultRecipesPath, recipeByPartOfName.get(Integer.parseInt(userChooseToView) - 1));
                         break;
                     case "6":
                         choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
@@ -139,9 +142,7 @@ public class Demo {
                         printAllRecipesByName(recipeByFilter);
                         String userChooseToView1 = UserService.getUserChoose("Enter number of recipe that you want to view");
                         RecipeService.printRecipeByIndex(recipeByFilter, userChooseToView1);
-
                         break;
-
                     case "7":
                         if (UserService.validateUserAge(Integer.toString(currentUser.getAge()))) {
                             System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" +
@@ -174,5 +175,4 @@ public class Demo {
 
         }
     }
-
 }
