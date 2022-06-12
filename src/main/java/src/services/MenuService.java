@@ -1,5 +1,7 @@
 package src.services;
 
+import src.constants.Constants;
+
 import java.io.IOException;
 
 import static src.constants.Constants.ANSI_RED;
@@ -37,7 +39,7 @@ public class MenuService {
 
     }
     public static String appendCocktailRecipes(String userAge){
-        boolean giveAccess = (Integer.parseInt(userAge) >= 18);
+        boolean giveAccess = (Integer.parseInt(userAge) >= Constants.ADULT_USER);
         if (giveAccess){
             return  PRINT_LINE +
                     "|\t8. View cocktail recipes                   |\n";

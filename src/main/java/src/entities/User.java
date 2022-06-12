@@ -1,5 +1,8 @@
 package src.entities;
 
+import src.constants.Constants;
+import src.constants.Massages;
+
 public class User {
 
     private String username;
@@ -31,8 +34,8 @@ public class User {
     }
 
     public void setAge(int age) {
-        if (age < 0 || age > 120) {
-            System.err.println("Invalid age.");
+        if (age < Constants.ZERO || age > Constants.MAXIMUM_USER_AGE) {
+            System.err.println(Massages.INVALID_AGE);
         }
         this.age = age;
     }

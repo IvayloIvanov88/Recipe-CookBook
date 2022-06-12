@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static src.services.CSVFileService.updateCSV;
-
 
 public class RecipeService {
 
@@ -43,7 +41,6 @@ public class RecipeService {
     }
 
     public static List<Recipe> getRecipeByFilter(List<Recipe> recipes, String filter) {
-
         return recipes.stream()
                 .filter(r -> Objects.equals(r.getClass().getSimpleName().toLowerCase(), (filter + "recipe").toLowerCase()))
                 .collect(Collectors.toList());
@@ -66,7 +63,7 @@ public class RecipeService {
     }
 
     public static void enablePagination(List<Recipe> recipes) {
-        System.out.printf("There are %d recipes in this book.\n", recipes.size());
+        System.out.printf("There are %d recipes in this book.%n", recipes.size());
         try {
             int perPage = Integer.parseInt(UserService.getUserChoose("Enter how many recipes per page: "));
             int currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
@@ -75,7 +72,6 @@ public class RecipeService {
             System.err.println(Massages.INVALID_INPUT + Massages.ENTER_NUMBER);
             enablePagination(recipes);
         }
-
     }
 
     public static void paginateRecipes(List<Recipe> recipes, int perPage, int currentPage) {
@@ -243,7 +239,7 @@ public class RecipeService {
                     recipe.setVoteCount(Integer.parseInt("0"));
                 }
                 recipe.setOwner(nextLine[7]);
-                if (currentUser.getAge() < 18 && isRecipeCocktail(recipe.getName())) {
+                if (currentUser.getAge() < Constants.ADULT_USER && isRecipeCocktail(recipe.getName())) {
                     return;
                 } else {
                     recipes.add(recipe);
@@ -293,7 +289,7 @@ public class RecipeService {
         double oldRecipeRate = recipesToEvaluate.getRating();
         double newRecipeRate = evaluateRecipe(recipesToEvaluate);
         String evaluateRecipeName = recipesToEvaluate.getName();
-        updateCSV(defaultRecipesPath, String.valueOf(recipesToEvaluate.getVoteCount()), String.valueOf(oldVoteCount), evaluateRecipeName);
-        updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate), evaluateRecipeName);
+        CSVFileService.updateCSV(defaultRecipesPath, String.valueOf(recipesToEvaluate.getVoteCount()), String.valueOf(oldVoteCount), evaluateRecipeName);
+        CSVFileService.updateCSV(defaultRecipesPath, String.valueOf(newRecipeRate), String.valueOf(oldRecipeRate), evaluateRecipeName);
     }
 }

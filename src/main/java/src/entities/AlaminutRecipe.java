@@ -1,6 +1,8 @@
 package src.entities;
 
 
+import src.constants.Constants;
+
 public class AlaminutRecipe extends Recipe{
 
     public AlaminutRecipe(String name, int serving, int prepTime, double rating, int voteCount, String owner) {
@@ -17,8 +19,8 @@ public class AlaminutRecipe extends Recipe{
     }
     @Override
     public void setPrepTime(int prepTime) {
-        if (prepTime > 15) {
-            System.err.println("The Alaminut recipe should be prepared within 15 minutes");
+        if (prepTime > Constants.ALAMINUT_MAX_PREPARATION_TIME) {
+            System.err.println("The Alaminut recipe should be prepared within 30 minutes");
         } else {
             super.setPrepTime(prepTime);
         }

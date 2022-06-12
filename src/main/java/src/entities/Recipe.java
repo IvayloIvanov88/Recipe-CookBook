@@ -1,5 +1,8 @@
 package src.entities;
 
+import src.constants.Constants;
+import src.constants.Massages;
+
 import java.util.*;
 
 import static java.lang.String.format;
@@ -13,7 +16,7 @@ public abstract class Recipe {
     private int prepTime;
     private int voteCount;
     private double rating;
-    private double userRating = 0;
+    private double userRating = Constants.ZERO;
     private String owner;
 
 
@@ -84,7 +87,7 @@ public abstract class Recipe {
 
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            System.err.println("The Recipe should have a name.");
+            System.err.println(Massages.SHOULD_HAVE_INGREDIENT + Massages.EDIT_RECIPE);
         } else {
             this.name = name;
         }
@@ -97,7 +100,7 @@ public abstract class Recipe {
 
     public void addIngredient(String ingredient) {
         if (ingredient == null || ingredient.trim().isEmpty()) {
-            System.err.println("The Recipe should have an ingredient.");
+            System.err.println(Massages.SHOULD_HAVE_INGREDIENT + Massages.EDIT_RECIPE);
         } else {
             this.ingredient.add(ingredient);
         }
@@ -118,7 +121,7 @@ public abstract class Recipe {
 
     public void addAllIngredient(List<String> ingredient) {
         if (ingredient == null || ingredient.isEmpty()) {
-            System.err.println("The Recipe should have an ingredient.");
+            System.err.println(Massages.SHOULD_HAVE_INGREDIENT + Massages.EDIT_RECIPE);
         } else {
             this.ingredient.addAll(ingredient);
         }
@@ -126,16 +129,16 @@ public abstract class Recipe {
 
 
     public void setServing(int serving) {
-        if (serving <= 0) {
-            System.err.println("The Recipe should have at least one serving. ");
+        if (serving <= Constants.ZERO) {
+            System.err.println("The Recipe should have at least one serving. " + Massages.EDIT_RECIPE);
         } else {
             this.serving = serving;
         }
     }
 
     public void setPrepTime(int prepTime) {
-        if (prepTime <= 0) {
-            System.err.println("The Recipe should have positive preparation time.");
+        if (prepTime <= Constants.ZERO) {
+            System.err.println("The Recipe should have positive preparation time. " + Massages.EDIT_RECIPE);
         } else {
             this.prepTime = prepTime;
         }
@@ -146,8 +149,8 @@ public abstract class Recipe {
     }
 
     public void setVoteCount(int voteCount) {
-        if (voteCount < 0) {
-            System.err.println("Voters must be a positive number.");
+        if (voteCount < Constants.ZERO) {
+            System.err.println("Voters must be a positive number. ");
         } else {
             this.voteCount = voteCount;
         }
@@ -163,15 +166,15 @@ public abstract class Recipe {
     }
 
     public double calcAvgRating() {
-        if (voteCount > 0) {
+        if (voteCount > Constants.ZERO) {
             return this.rating / this.voteCount;
         } else {
-            return 0;
+            return Constants.ZERO;
         }
     }
 
     public void setUserRating(int userRating) {
-        if (userRating < 0 || userRating > 6) {
+        if (userRating < Constants.ZERO || userRating > Constants.USER_MAX_RATE) {
             System.err.println("Rating must be a positive number between 0 and 6.");
         } else {
             this.voteCount++;

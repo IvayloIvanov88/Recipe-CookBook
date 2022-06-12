@@ -2,6 +2,7 @@ package src.services;
 
 import src.application.Demo;
 import src.constants.Constants;
+import src.constants.Massages;
 import src.entities.User;
 
 import javax.crypto.SecretKeyFactory;
@@ -26,7 +27,7 @@ public class AuthService {
         if (user != null) {
             String salt = user.getSalt();
             String calculatedHash = getEncryptedPassword(password, salt);
-            Arrays.fill(password,'*');
+            Arrays.fill(password, '*');
             return calculatedHash.equals(user.getPassword());
         } else {
             return false;
@@ -35,7 +36,7 @@ public class AuthService {
 
     public boolean logIn(String username, char[] password) {
         if (isUserAuthenticated(username, password)) {
-            Arrays.fill(password,'*');
+            Arrays.fill(password, '*');
             System.out.println(Constants.ANSI_GREEN + "Login successful." + Constants.ANSI_RESET);
             return true;
         } else {
@@ -47,7 +48,7 @@ public class AuthService {
     public boolean signUp(String userName, char[] password, int age, String path) {
         String salt = getNewSalt();
         String encryptedPassword = getEncryptedPassword(password, salt);
-        Arrays.fill(password,'*');
+        Arrays.fill(password, '*');
 
         User user = new User();
         user.setPassword(encryptedPassword);
@@ -77,7 +78,7 @@ public class AuthService {
 
         byte[] saltBytes = Base64.getDecoder().decode(salt);
         KeySpec spec = new PBEKeySpec(password, saltBytes, iterations, derivedKeyLength);
-        Arrays.fill(password,'*');
+        Arrays.fill(password, '*');
         SecretKeyFactory f = null;
         try {
             f = SecretKeyFactory.getInstance(algorithm);
@@ -131,9 +132,9 @@ public class AuthService {
         while (!isAgeValid) {
             try {
                 age = Integer.parseInt(UserService.getUserChoose("Enter your age: "));
-                isAgeValid = age >= 0 && age < 120;
+                isAgeValid = age >= Constants.ZERO && age < Constants.MAXIMUM_USER_AGE;
             } catch (NumberFormatException e) {
-                System.err.println("Try again, enter age in digits.");
+                System.err.println(Massages.INVALID_AGE + Massages.ENTER_INTEGER_NUMBER);
                 isAgeValid = false;
             }
         }
@@ -152,10 +153,10 @@ public class AuthService {
         final int MIN_Lowercase = 2;
         final int NUM_Digits = 2;
         final int SPECIAL = 2;
-        int uppercaseCounter = 0;
-        int lowercaseCounter = 0;
-        int digitCounter = 0;
-        int specialCounter = 0;
+        int uppercaseCounter = Constants.ZERO;
+        int lowercaseCounter = Constants.ZERO;
+        int digitCounter = Constants.ZERO;
+        int specialCounter = Constants.ZERO;
 
         System.err.println("Enter a password");
         char[] password = SCANNER.nextLine().toCharArray();
@@ -189,7 +190,7 @@ public class AuthService {
                 System.out.println("Minimum 2 special characters");
 
         }
-        Arrays.fill(password,'*');
+        Arrays.fill(password, '*');
         return validatePassword();
     }
 
@@ -204,7 +205,6 @@ public class AuthService {
         MenuService.loginMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         char[] password = UserService.getUserChoose("Enter a password: ").toCharArray();
-//        char[] password = PasswordFieldService.readPassword("Enter a password:\n");
 
         try {
             if (authService.logIn(username, password)) {

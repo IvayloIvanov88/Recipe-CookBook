@@ -1,6 +1,8 @@
 package src.entities;
 
-public class CocktailRecipe extends Recipe{
+import src.constants.Constants;
+
+public class CocktailRecipe extends Recipe {
 
     public CocktailRecipe(String name, int serving, int prepTime, double rating, int voteCount, String owner) {
         super(name, serving, prepTime, rating, voteCount, owner);
@@ -12,8 +14,8 @@ public class CocktailRecipe extends Recipe{
 
     @Override
     public void setPrepTime(int prepTime) {
-        if (prepTime > 10) {
-            System.err.println("The cocktail recipe should be prepared within 10 minutes");
+        if (prepTime > Constants.COCKTAIL_MAX_PREPARATION_TIME) {
+            System.err.println("The cocktail recipe should be prepared within" + Constants.COCKTAIL_MAX_PREPARATION_TIME + "minutes");
         } else {
             super.setPrepTime(prepTime);
         }

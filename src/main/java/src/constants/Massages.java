@@ -16,5 +16,8 @@ public class Massages {
     public static final String YOU_ARE_YOUNG = "You are still very young!";
     public static final String ENTER_NUMBER = "Enter a page number to see: ";
     public static final String INVALID_INPUT = "Invalid input.";
+    public static final String EDIT_RECIPE = "Please, edit your recipe.";
+    public static final String INVALID_AGE = "Invalid age.";
+    public static final String SHOULD_HAVE_INGREDIENT = "The Recipe should have an ingredient.";
 
 }

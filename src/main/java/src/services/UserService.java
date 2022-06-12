@@ -63,7 +63,7 @@ public class UserService {
         String toAppendThirdStep = SCANNER.nextLine();
         sb.append(toAppendThirdStep).append(Constants.DELIMITER);
 
-        if (rating == 0 && voteCount == 0) {
+        if (rating == Constants.ZERO && voteCount == Constants.ZERO) {
             String toAppendDefaultRating = "0";
             sb.append(toAppendDefaultRating).append(Constants.DELIMITER);
 
@@ -86,7 +86,7 @@ public class UserService {
     public static boolean validateUserAge(String userChoose) {
         try {
             int age = Integer.parseInt(userChoose);
-            return age >= 18;
+            return age >= Constants.ADULT_USER;
         } catch (NumberFormatException e) {
             System.err.println(Massages.ENTER_AGE_IN_DIGITS);
         }

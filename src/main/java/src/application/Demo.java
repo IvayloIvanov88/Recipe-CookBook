@@ -83,7 +83,7 @@ public class Demo {
                     case "2":
                         String recipeName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
-                            if (RecipeService.isRecipeCocktail(recipeName) && currentUser.getAge() < 18) {
+                            if (RecipeService.isRecipeCocktail(recipeName) && currentUser.getAge() < ADULT_USER) {
                                 System.err.println(Massages.YOU_ARE_YOUNG);
                                 break;
                             } else {
