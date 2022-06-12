@@ -151,9 +151,18 @@ public class RecipeService {
         return recipes.stream().map(Recipe::getName).anyMatch(recipeName::equalsIgnoreCase);
     }
 
-    public static boolean isRecipeCocktail(String recipeName) {
+    public static boolean isRecipeSubjectOfEvaluation() {
+        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
+        return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
+    }
+
+    public static boolean isRecipeCocktailRecipeByName(String recipeName) {
         return (recipeName.contains("cocktail") || recipeName.contains("drink") ||
                 recipeName.contains("cocktails") || recipeName.contains("drinks") || recipeName.contains("alcohol"));
+    }
+
+    public static boolean isRecipeInstanceOfCocktailRecipe(Recipe recipe) {
+        return recipe instanceof CocktailRecipe;
     }
 
     public static void editRecipe(String path, List<String[]> fileData, List<Recipe> recipes, User currentUser) {
@@ -212,41 +221,49 @@ public class RecipeService {
 
             if (!isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
                 recipe = getRecipeType(recipeName);
-
-                recipe.setName(nextLine[0]);
-
-                try {
-                    recipe.setServing(Integer.parseInt(nextLine[1].trim()));
-                    recipe.setPrepTime(Integer.parseInt(nextLine[2].trim()));
-                } catch (NumberFormatException e) {
-                    System.err.println("Enter digits for serving and for preparation time");
-                }
-
-                recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
-
-                int countSteps = 1;
-                String[] split = nextLine[4].split("\\.\\s+");
-                for (String s : split) {
-                    recipe.setDirections(countSteps++, s);
-                }
-                try {
-                    recipe.setRating(Double.parseDouble(nextLine[5]));
-                    recipe.setVoteCount(Integer.parseInt(nextLine[6]));
-                } catch (NumberFormatException e) {
-                    System.err.println("Enter digit in range 0 - 6");
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    recipe.setRating(Double.parseDouble("0.00"));
-                    recipe.setVoteCount(Integer.parseInt("0"));
-                }
-                recipe.setOwner(nextLine[7]);
-                if (currentUser.getAge() < Constants.ADULT_USER && isRecipeCocktail(recipe.getName())) {
+                if (currentUser.getAge() < Constants.ADULT_USER && isRecipeInstanceOfCocktailRecipe(recipe) ||
+                        currentUser.getAge() < Constants.ADULT_USER && isRecipeCocktailRecipeByName(recipeName)) {
+                    System.err.println(Massages.YOU_ARE_YOUNG);
                     return;
                 } else {
-                    recipes.add(recipe);
-                }
+                    recipe.setName(nextLine[0]);
+
+                    try {
+                        recipe.setServing(Integer.parseInt(nextLine[1].trim()));
+                        recipe.setPrepTime(Integer.parseInt(nextLine[2].trim()));
+                    } catch (NumberFormatException e) {
+                        System.err.println("Enter digits for serving and for preparation time");
+                    }
+
+                    recipe.addAllIngredient(Arrays.stream(nextLine[3].split(",")).collect(Collectors.toList()));
+
+                    int countSteps = 1;
+                    String[] split = nextLine[4].split("\\.\\s+");
+                    for (String s : split) {
+                        recipe.setDirections(countSteps++, s);
+                    }
+                    try {
+                        recipe.setRating(Double.parseDouble(nextLine[5]));
+                        recipe.setVoteCount(Integer.parseInt(nextLine[6]));
+                    } catch (NumberFormatException e) {
+                        System.err.println("Enter digit in range 0 - 6");
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        recipe.setRating(Double.parseDouble("0.00"));
+                        recipe.setVoteCount(Integer.parseInt("0"));
+                    }
+                    recipe.setOwner(nextLine[7]);
+//                if (currentUser.getAge() < Constants.ADULT_USER && isRecipeInstanceOfCocktailRecipe(recipes) ||
+//                        currentUser.getAge() < Constants.ADULT_USER && isRecipeCocktailRecipeByName(recipe.getName())) {
+//                    System.out.println(Massages.YOU_ARE_YOUNG);
+//                    return;
+//                } else {
+
+                recipes.add(recipe);
             }
         }
     }
+
+}
 
     private static Recipe getRecipeType(String name) {
 
@@ -266,11 +283,6 @@ public class RecipeService {
         System.out.println("Specified recipe type:\n Meat, Meatless, Soup, Salad, Dessert, Pasta or Alaminut");
         nameWordByWord = scanner.nextLine();
         return getRecipeType(nameWordByWord);
-    }
-
-    public static boolean isRecipeSubjectOfEvaluation() {
-        String userChoose = UserService.getUserChoose("Do you want to evaluate the recipe -> 'y' for yes or 'n' for no");
-        return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
     }
 
     public static double evaluateRecipe(Recipe recipe) {
