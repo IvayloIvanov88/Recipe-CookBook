@@ -61,6 +61,7 @@ public class Demo {
             List<Recipe> defaultRecipes = unhiddenRecipes;
             List<String[]> defaultRecipesData = unhiddenRecipesData;
 
+
             MenuService.showOptions(Integer.toString(currentUser.getAge()));
 
 
@@ -68,7 +69,10 @@ public class Demo {
 
                 switch (choose) {
                     case "1":
-                        printAllRecipesByName(defaultRecipes);
+                        System.out.printf("There are %d recipes in this book.\n", unhiddenRecipes.size());
+                        int perPage = Integer.parseInt(UserService.getUserChoose("Enter how many recipes per page: "));
+                        int currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
+                        paginateRecipes(defaultRecipes, perPage, currentPage);
                         if (defaultRecipes.isEmpty()) {
                             System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
                             break;

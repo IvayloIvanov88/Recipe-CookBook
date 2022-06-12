@@ -4,6 +4,7 @@ import src.constants.Constants;
 import src.constants.Massages;
 import src.entities.*;
 
+import java.sql.Struct;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -59,6 +60,43 @@ public class RecipeService {
         unhiddenRecipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
     }
 
+
+
+    public static void paginateRecipes(List<Recipe> recipes, int perPage, int currentPage){
+        String result = getPages(recipes, perPage, currentPage);
+        if (!result.equals("")){
+            System.out.println(result);
+            if (!stayOnThisPage(currentPage)){
+                currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
+                try{
+                    paginateRecipes(recipes, perPage, currentPage);
+                }catch (IndexOutOfBoundsException e){
+                    System.out.println("No content. Redirecting to page 1:");
+                    paginateRecipes(recipes, perPage, 1);
+                }
+            }
+        }else{
+            System.out.println("No content. Redirecting to page 1:");
+            paginateRecipes(recipes, perPage, 1);
+        }
+    }
+    public static String getPages(List<Recipe> recipes, int perPage, int currentPage){
+        ListIterator<Recipe> itr;
+        StringBuilder sb = new StringBuilder();
+        AtomicInteger countRecipe = new AtomicInteger(currentPage*perPage - perPage);
+        for (int i = (currentPage - 1) * perPage; i/perPage + 1 == currentPage && i < recipes.size(); i++) {
+            itr = recipes.listIterator(i);
+            if (itr.hasNext()){
+                sb.append(countRecipe.addAndGet(1)).append(" - ").append(itr.next().getName()).append("\n");
+                //System.out.printf("%d. %s%n", countRecipe.addAndGet(1), itr.next().getName());
+            }
+        }
+        return sb.toString();
+    }
+    public static boolean stayOnThisPage(int pageNum){
+        String userChoose = UserService.getUserChoose("This is page "+ pageNum +"\nStay on this page? -> 'y' / 'n'");
+        return !userChoose.equalsIgnoreCase("n") && userChoose.equalsIgnoreCase("y");
+    }
 
     public static void printRecipeByIndex(List<Recipe> recipeByPartOfName, String userChooseToView) {
         try {
