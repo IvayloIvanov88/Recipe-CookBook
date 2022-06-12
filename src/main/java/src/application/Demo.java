@@ -8,6 +8,7 @@ import src.entities.User;
 
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static src.constants.Constants.*;
 import static src.services.RecipeService.*;
@@ -54,8 +55,8 @@ public class Demo {
             List<String[]> unhiddenRecipesData = CSVFileService.readFromCSV(UNHIDDEN_RECIPE_PATH);
             List<String[]> hiddenRecipesData = CSVFileService.readFromCSV(HIDDEN_RECIPE_PATH);
 
-            RecipeService.addRecipesInList(unhiddenRecipes, unhiddenRecipesData);
-            RecipeService.addRecipesInList(hiddenRecipes, hiddenRecipesData);
+            RecipeService.addRecipesInList(unhiddenRecipes, unhiddenRecipesData, currentUser);
+            RecipeService.addRecipesInList(hiddenRecipes, hiddenRecipesData, currentUser);
 
             String defaultRecipesPath = UNHIDDEN_RECIPE_PATH;
             List<Recipe> defaultRecipes = unhiddenRecipes;
@@ -69,10 +70,7 @@ public class Demo {
 
                 switch (choose) {
                     case "1":
-                        System.out.printf("There are %d recipes in this book.\n", unhiddenRecipes.size());
-                        int perPage = Integer.parseInt(UserService.getUserChoose("Enter how many recipes per page: "));
-                        int currentPage = Integer.parseInt(UserService.getUserChoose("Enter a page number to see: "));
-                        paginateRecipes(defaultRecipes, perPage, currentPage);
+                        printAllRecipesByName(defaultRecipes);
                         if (defaultRecipes.isEmpty()) {
                             System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
                             break;
@@ -86,12 +84,17 @@ public class Demo {
                     case "2":
                         String recipeName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
-                            String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0, currentUser);
-                            CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
+                            if (RecipeService.isRecipeCocktail(recipeName) && currentUser.getAge() < 18){
+                                System.err.println("You are still very young!");
+                                break;
+                            }else{
+                                String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0, currentUser);
+                                CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
 
-                            List<String[]> filesToAddInList = new ArrayList<>(Collections.singleton(filesToAddInCSV));
-                            RecipeService.addRecipesInList(defaultRecipes, filesToAddInList);
-                            System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
+                                List<String[]> filesToAddInList = new ArrayList<>(Collections.singleton(filesToAddInCSV));
+                                RecipeService.addRecipesInList(defaultRecipes, filesToAddInList, currentUser);
+                                System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
+                            }
                         } else {
                             System.err.println("There is already such recipe.");
                         }
@@ -148,16 +151,19 @@ public class Demo {
                         RecipeService.printRecipeByIndex(recipeByFilter, userChooseToView1);
                         break;
                     case "7":
+                        defaultRecipesPath = HIDDEN_RECIPE_PATH;
+                        defaultRecipes = getRecipesByUser(hiddenRecipes, currentUser.getUsername());
+                        defaultRecipesData = hiddenRecipesData;
+                        System.out.println("Redirecting to hidden recipes menu.");
+                        break;
+                    case "8":
                         if (UserService.validateUserAge(Integer.toString(currentUser.getAge()))) {
-                            System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" +
-                                    "to go back, just type 'back' " + ANSI_RESET);
+                            System.out.println(ANSI_GREEN + "Welcome to the secret section with alcoholic beverages.\n" + ANSI_RESET);
                         } else {
                             System.err.println("You are still very young!");
                             break;
                         }
-                        defaultRecipesPath = HIDDEN_RECIPE_PATH;
-                        defaultRecipes = getRecipesByUser(hiddenRecipes, currentUser.getUsername());
-                        defaultRecipesData = hiddenRecipesData;
+                        printAllRecipesByName(getRecipeByFilter(defaultRecipes,"cocktail"));
                         break;
                     case "back":
                         System.out.println(ANSI_GREEN + "You are back to normal, unhidden recipes." + ANSI_RESET);

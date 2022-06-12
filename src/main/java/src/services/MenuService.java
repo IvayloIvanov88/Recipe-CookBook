@@ -27,18 +27,20 @@ public class MenuService {
                 "|\t5. Find specific recipe by name            |\n" +
                 PRINT_LINE +
                 "|\t6. Find specific recipe by type            |\n" +
-                appendHiddenRecipes(age) +
+                PRINT_LINE +
+                "|\t7. View hidden recipes                     |\n" +
+                appendCocktailRecipes(age) +
                 PRINT_LINE + PRINT_LINE +
                 "|\tTo exit type: exit                         |\n" +
                 PRINT_LINE);
 
 
     }
-    public static String appendHiddenRecipes(String userAge){
+    public static String appendCocktailRecipes(String userAge){
         boolean giveAccess = (Integer.parseInt(userAge) >= 18);
         if (giveAccess){
             return  PRINT_LINE +
-                    "|\t7. View hidden recipes                     |\n";
+                    "|\t8. View cocktail recipes                   |\n";
         }else{
             return "";
         }
