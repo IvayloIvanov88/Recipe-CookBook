@@ -233,7 +233,7 @@ public class RecipeService {
                 recipe = getRecipeType(recipeName);
                 if (currentUser.getAge() < Constants.ADULT_USER &&
                         (isRecipeInstanceOfCocktailRecipe(recipe) || isRecipeCocktailRecipeByName(recipeName))) {
-                    return;
+                    continue;
                 } else {
                     recipe.setName(nextLine[0]);
 

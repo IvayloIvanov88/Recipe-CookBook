@@ -76,7 +76,7 @@ public abstract class Recipe {
     private StringBuilder getPreparationAsString() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, String> entry : this.directions.entrySet()) {
-            sb.append(String.format(ANSI_RED + "\tStep: %d " + ANSI_RESET + "-> %s\n", entry.getKey(), entry.getValue()));
+            sb.append(String.format(ANSI_RED + "\tStep: %d " + ANSI_RESET + "-> %s.\n", entry.getKey(), entry.getValue()));
         }
         return sb;
     }
