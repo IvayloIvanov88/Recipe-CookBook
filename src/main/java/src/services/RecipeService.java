@@ -186,7 +186,8 @@ public class RecipeService {
                 int idx = fileData.indexOf(currentRecipe) + 1;
                 CSVFileService.deleteFromCSV(path, idx);
 
-                String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, voteCount, rating, currentUser);
+                String newName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
+                String[] usersChooseFileToAddInCSV = UserService.getUsersChooseFileToAdd(newName, voteCount, rating, currentUser);
                 CSVFileService.writeInCSV(path, usersChooseFileToAddInCSV);
                 List<String[]> usersChooseFileToAddInList = new ArrayList<>(Collections.singleton(usersChooseFileToAddInCSV));
                 addRecipesInList(recipes, usersChooseFileToAddInList, currentUser);

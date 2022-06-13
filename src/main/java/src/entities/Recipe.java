@@ -174,8 +174,8 @@ public abstract class Recipe {
     }
 
     public void setUserRating(int userRating) {
-        if (userRating < Constants.ZERO || userRating > Constants.USER_MAX_RATE) {
-            System.err.println("Rating must be a positive number between 0 and 6.");
+        if (userRating < Constants.USER_MIN_RATE || userRating > Constants.USER_MAX_RATE) {
+            System.err.println("Rating must be a positive number between 1 and 6.");
         } else {
             this.voteCount++;
             this.setRating(userRating);
