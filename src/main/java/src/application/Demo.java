@@ -63,10 +63,6 @@ public class Demo {
                 switch (choose) {
                     case "1":
                         printAllRecipesByName(defaultRecipes);
-                        if (defaultRecipes.isEmpty()) {
-                            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
-                            break;
-                        }
                         String userChooseRecipe = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(defaultRecipes, userChooseRecipe);
                         if (isRecipeSubjectOfEvaluation())
@@ -78,12 +74,11 @@ public class Demo {
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
                             if (RecipeService.isRecipeCocktailRecipeByName(recipeName) && currentUser.getAge() < ADULT_USER) {
                                 System.err.println(Massages.YOU_ARE_YOUNG);
-                                return;
+                                break;
                             } else {
                                 String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0, currentUser);
                                 CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
-                                List<String[]> filesToAddInList = new ArrayList<>(Collections.singleton(filesToAddInCSV));
-                                RecipeService.addRecipesInList(defaultRecipes, filesToAddInList, currentUser);
+                                RecipeService.addRecipesInList(defaultRecipes, new ArrayList<>(Collections.singleton(filesToAddInCSV)), currentUser);
                                 System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
                             }
                         } else {
@@ -96,13 +91,10 @@ public class Demo {
                         break;
                     case "4":
                         printAllRecipesByName(defaultRecipes);
-                        choose = UserService.getUserChoose("Choose number to delete.");
-                        deleteRecipe(defaultRecipes, defaultRecipesPath, choose, currentUser);
+                        deleteRecipe(defaultRecipes, defaultRecipesPath, UserService.getUserChoose("Choose number to delete."), currentUser);
                         break;
                     case "5":
-                        choose = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
-
-                        List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, choose);
+                        List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, UserService.getUserChoose(Massages.ENTER_RECIPES_NAME));
                         if (recipeByPartOfName.isEmpty()) {
                             System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
                             break;
@@ -120,15 +112,15 @@ public class Demo {
                             recipeEvaluateSystem(defaultRecipesPath, recipeByPartOfName.get(Integer.parseInt(userChooseToView) - 1));
                         break;
                     case "6":
-                        choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
-                        List<Recipe> recipeByFilter = getRecipeByFilter(defaultRecipes, choose);
+                        List<Recipe> recipeByFilter = getRecipeByFilter(defaultRecipes,
+                                UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup."));
                         printRecipesByFilter(recipeByFilter);
                         break;
                     case "7":
                         defaultRecipesPath = HIDDEN_RECIPE_PATH;
                         defaultRecipes = getRecipesByUser(hiddenRecipes, currentUser.getUsername());
                         defaultRecipesData = hiddenRecipesData;
-                        System.out.println(ANSI_GREEN + "Redirecting to hidden recipes menu, all options is available\nTo go back type: back" + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + "Redirecting to hidden recipes menu, all options are available\nTo go back type: back" + ANSI_RESET);
                         break;
                     case "8":
                         if (UserService.validateUserAge(Integer.toString(currentUser.getAge()))) {
@@ -148,7 +140,6 @@ public class Demo {
                         break;
                     default:
                         System.out.println(ANSI_GREEN + "Try again, read carefully options." + ANSI_RESET);
-
                 }
                 MenuService.pressEnterToContinue();
                 MenuService.showOptions(Integer.toString(currentUser.getAge()));

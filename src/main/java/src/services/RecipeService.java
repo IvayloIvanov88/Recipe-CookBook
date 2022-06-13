@@ -52,6 +52,10 @@ public class RecipeService {
     }
 
     public static void printAllRecipesByName(List<Recipe> recipes) {
+        if (recipes.isEmpty()) {
+            System.err.println(Massages.THERE_IS_NO_SUCH_RECIPE);
+            return;
+        }
         if (recipes.size() < Constants.PAGINATION_MIN_RECIPE) {
             AtomicInteger countRecipe = new AtomicInteger(0);
             recipes.forEach(r -> System.out.printf("%d. %s%n", countRecipe.addAndGet(1), r.getName()));
@@ -226,8 +230,8 @@ public class RecipeService {
 
             if (!isRecipeContainsRecipeWithSameName(recipes, recipeName)) {
                 recipe = getRecipeType(recipeName);
-                if (currentUser.getAge() < Constants.ADULT_USER && isRecipeInstanceOfCocktailRecipe(recipe) ||
-                        currentUser.getAge() < Constants.ADULT_USER && isRecipeCocktailRecipeByName(recipeName)) {
+                if (currentUser.getAge() < Constants.ADULT_USER &&
+                        (isRecipeInstanceOfCocktailRecipe(recipe) || isRecipeCocktailRecipeByName(recipeName))) {
                     return;
                 } else {
                     recipe.setName(nextLine[0]);
