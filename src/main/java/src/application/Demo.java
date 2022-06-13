@@ -1,6 +1,5 @@
 package src.application;
 
-
 import src.constants.Massages;
 import src.entities.*;
 import src.services.*;
@@ -11,11 +10,8 @@ import java.util.List;
 
 import static src.constants.Constants.*;
 import static src.services.RecipeService.*;
-import static src.services.UserService.SCANNER;
-
 
 public class Demo {
-
     public static final Map<String, User> usersData = new HashMap<>();
 
     public static void main(String[] args) {
@@ -45,7 +41,6 @@ public class Demo {
                 break;
             }
             MenuService.showLoginOptions();
-
         }
         if (currentUser != null) {
             List<Recipe> unhiddenRecipes = new ArrayList<>();
@@ -61,9 +56,7 @@ public class Demo {
             List<Recipe> defaultRecipes = unhiddenRecipes;
             List<String[]> defaultRecipesData = unhiddenRecipesData;
 
-
             MenuService.showOptions(Integer.toString(currentUser.getAge()));
-
 
             while (!(choose = SCANNER.nextLine()).trim().equalsIgnoreCase(Massages.EXIT)) {
 
@@ -85,11 +78,10 @@ public class Demo {
                         if (!RecipeService.isRecipeExist(defaultRecipesData, recipeName)) {
                             if (RecipeService.isRecipeCocktailRecipeByName(recipeName) && currentUser.getAge() < ADULT_USER) {
                                 System.err.println(Massages.YOU_ARE_YOUNG);
-                                break;
+                                return;
                             } else {
                                 String[] filesToAddInCSV = UserService.getUsersChooseFileToAdd(recipeName, 0, 0, currentUser);
                                 CSVFileService.writeInCSV(defaultRecipesPath, filesToAddInCSV);
-
                                 List<String[]> filesToAddInList = new ArrayList<>(Collections.singleton(filesToAddInCSV));
                                 RecipeService.addRecipesInList(defaultRecipes, filesToAddInList, currentUser);
                                 System.out.println(ANSI_GREEN + "Recipe was added." + ANSI_RESET);
@@ -98,7 +90,6 @@ public class Demo {
                             System.err.println("There is already such recipe.");
                         }
                         break;
-
                     case "3":
                         printAllRecipesByName(defaultRecipes);
                         editRecipe(defaultRecipesPath, defaultRecipesData, defaultRecipes, currentUser);
@@ -106,12 +97,7 @@ public class Demo {
                     case "4":
                         printAllRecipesByName(defaultRecipes);
                         choose = UserService.getUserChoose("Choose number to delete.");
-                        try {
-                            int userChoose = Integer.parseInt(choose);
-                            deleteRecipe(defaultRecipes, defaultRecipesPath, userChoose, currentUser);
-                        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                            System.err.println("Try with valid number!");
-                        }
+                        deleteRecipe(defaultRecipes, defaultRecipesPath, choose, currentUser);
                         break;
                     case "5":
                         choose = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
@@ -135,7 +121,6 @@ public class Demo {
                         break;
                     case "6":
                         choose = UserService.getUserChoose("Enter recipe`s type\nChoose one : Meet, meatless, dessert, salad, alaminut, pasta, soup.");
-
                         List<Recipe> recipeByFilter = getRecipeByFilter(defaultRecipes, choose);
                         printRecipesByFilter(recipeByFilter);
                         break;
@@ -172,8 +157,6 @@ public class Demo {
         } else {
             System.out.println("\n\t\t\tAuthorization required");
             artGen.draw("Goodbye", 11, ANSI_GREEN + "$" + ANSI_RESET);
-
         }
     }
-
 }

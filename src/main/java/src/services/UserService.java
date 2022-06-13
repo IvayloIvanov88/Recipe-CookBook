@@ -7,7 +7,8 @@ import src.entities.User;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+
+import static src.constants.Constants.SCANNER;
 
 
 public class UserService {
@@ -32,7 +33,6 @@ public class UserService {
 
     }
 
-    public static final Scanner SCANNER = new Scanner(System.in);
 
 
     public static String getUserChoose(String message) {

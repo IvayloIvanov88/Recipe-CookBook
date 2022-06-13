@@ -16,7 +16,6 @@ import java.util.Base64;
 import java.util.List;
 
 import static src.constants.Constants.USERS_DATA_PATH;
-import static src.services.UserService.SCANNER;
 
 
 public class AuthService {
@@ -125,7 +124,6 @@ public class AuthService {
         MenuService.signUpMessage();
         String username = UserService.getUserChoose("Enter a username: ");
         char[] password = validatePassword();
-        System.out.println(password);
 
         int age = 0;
         boolean isAgeValid = false;
@@ -159,7 +157,7 @@ public class AuthService {
         int specialCounter = Constants.ZERO;
 
         System.err.println("Enter a password");
-        char[] password = SCANNER.nextLine().toCharArray();
+        char[] password = Constants.SCANNER.nextLine().toCharArray();
 
         for (char c : password) {
             if (Character.isUpperCase(c))
@@ -193,12 +191,6 @@ public class AuthService {
         Arrays.fill(password, '*');
         return validatePassword();
     }
-
-//    public static boolean isValidPassword(String password) {
-//        Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$");
-//        Matcher matcher = pattern.matcher(password);
-//        return matcher.matches();
-//    }
 
     public static User loginUser() {
         AuthService authService = new AuthService();

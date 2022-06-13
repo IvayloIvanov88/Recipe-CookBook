@@ -30,7 +30,7 @@ public class MenuService {
                 PRINT_LINE +
                 "|\t6. Find specific recipe by type            |\n" +
                 PRINT_LINE +
-                "|\t7. View hidden recipes                     |\n" +
+                "|\t7. View your hidden recipes                |\n" +
                 appendCocktailRecipes(age) +
                 PRINT_LINE + PRINT_LINE +
                 "|\tTo exit type: exit                         |\n" +

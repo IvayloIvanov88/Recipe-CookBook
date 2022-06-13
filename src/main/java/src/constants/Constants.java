@@ -1,8 +1,11 @@
 package src.constants;
 
+import java.util.Scanner;
+
 public class Constants {
     private Constants() {
     }
+    public static final Scanner SCANNER = new Scanner(System.in);
 
     public static final String USERS_DATA_PATH = "src/main/java/src/users.csv";
     public static final String UNHIDDEN_RECIPE_PATH = "src/main/java/src/recipe.csv";
@@ -20,6 +23,7 @@ public class Constants {
     public static final int COCKTAIL_MAX_PREPARATION_TIME = 15;
     public static final int ALAMINUT_MAX_PREPARATION_TIME = 30;
     public static final int SALAD_MAX_PREPARATION_TIME = 60;
+    public static final int PAGINATION_MIN_RECIPE = 30;
 
 
 
