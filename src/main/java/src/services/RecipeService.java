@@ -179,11 +179,10 @@ public class RecipeService {
             double rating = recipe.getRating();
             int voteCount = recipe.getVoteCount();
             String owner = recipe.getOwner();
+            int idx = recipes.indexOf(recipe) + 1;
             recipes.removeAll(recipeByName);
-            String[] currentRecipe = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
 
             if (owner.equals(currentUser.getUsername()) || currentUser.getUsername().equals("admin")) {
-                int idx = fileData.indexOf(currentRecipe) + 1;
                 CSVFileService.deleteFromCSV(path, idx);
 
                 String newName = UserService.getUserChoose(Massages.ENTER_RECIPES_NAME);
