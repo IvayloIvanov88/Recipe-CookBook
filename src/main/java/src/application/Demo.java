@@ -63,6 +63,8 @@ public class Demo {
                 switch (choose) {
                     case "1":
                         printAllRecipesByName(defaultRecipes);
+                        if(defaultRecipes.isEmpty())
+                            break;
                         String userChooseRecipe = UserService.getUserChoose(Massages.ENTER_NUMBER_OF_RECIPE);
                         RecipeService.printRecipeByIndex(defaultRecipes, userChooseRecipe);
                         if (isRecipeSubjectOfEvaluation())
@@ -91,7 +93,7 @@ public class Demo {
                         break;
                     case "4":
                         printAllRecipesByName(defaultRecipes);
-                        deleteRecipe(defaultRecipes, defaultRecipesPath, UserService.getUserChoose("Choose number to delete."), currentUser);
+                        deleteRecipe(defaultRecipes, defaultRecipesData,defaultRecipesPath, UserService.getUserChoose("Choose number to delete."), currentUser);
                         break;
                     case "5":
                         List<Recipe> recipeByPartOfName = getRecipeByPartOfName(defaultRecipes, UserService.getUserChoose(Massages.ENTER_RECIPES_NAME));

@@ -200,14 +200,17 @@ public class RecipeService {
         }
     }
 
-    public static void deleteRecipe(List<Recipe> recipes, String path, String choose, User currentUser) {
+    public static void deleteRecipe(List<Recipe> recipes, List<String[]> fileData, String path, String choose, User currentUser) {
         try {
             int userChoose = Integer.parseInt(choose);
             Recipe currentRecipe = recipes.get(userChoose - 1);
+            String recipeName = currentRecipe.getName();
             String owner = currentRecipe.getOwner();
+            String[] recipeToDelete = fileData.stream().filter(r -> recipeName.equals(r[0])).findAny().orElse(null);
+            int idx = fileData.indexOf(recipeToDelete) + 1;
 
             if (currentUser.getUsername().equals(owner) || currentUser.getUsername().equals("admin")) {
-                CSVFileService.deleteFromCSV(path, userChoose);
+                CSVFileService.deleteFromCSV(path, idx);
                 recipes.remove(userChoose - 1);
                 System.out.println("Recipe deleted successfully!");
             } else {
